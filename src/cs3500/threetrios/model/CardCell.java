@@ -5,14 +5,17 @@ package cs3500.threetrios.model;
  */
 public class CardCell implements Cell {
 
-  private CartPt location;
+  private final CartPt location;
   private Card card;
-  private boolean isEmpty;
 
+  /**
+   * Constructs a CardCell with the given Card contained and a location.
+   * @param card can either be a Card or null.
+   * @param location location of the Cell on the grid.
+   */
   CardCell(Card card, CartPt location) {
     this.card = card;
     this.location = location;
-    this.isEmpty = this.card == null;
   }
 
   @Override
@@ -20,8 +23,27 @@ public class CardCell implements Cell {
     return this.location;
   }
 
+  /**
+   * Returns a copy of the card in this cell.
+   * @return Card this Cell's card.
+   * @throws IllegalStateException if this cell has no card.
+   */
   public Card getCard() {
-    return this.card;
+    if (this.card == null) {
+      throw new IllegalStateException("No card in this cell!");
+    }
+    return new Card(this.card.getName(), String.valueOf(this.card.getNorth()),
+            String.valueOf(this.card.getSouth()),
+            String.valueOf(this.card.getEast()),
+            String.valueOf(this.card.getWest()));
+  }
+
+  /**
+   * Sets the card field of this cell to the given Card.
+   * @param card Card to be put in this cell.
+   */
+  public void setCard(Card card) {
+    this.card = card;
   }
 
 }

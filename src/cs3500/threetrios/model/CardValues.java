@@ -24,6 +24,11 @@ public enum CardValues {
    */
   public char getValue() { return value; }
 
+  /**
+   * Returns the integer value of the constant in order to let A be valued
+   * at 10.
+   * @return int value of the Enum.
+   */
   public int getIntValue() {
     if (value == 'A') {
       return 10;

@@ -1,11 +1,54 @@
 package cs3500.threetrios.model;
 
-import cs3500.threetrios.model.Card;
+import java.util.ArrayList;
 
-public interface Player {
+/**
+ * Represents a player in a game of ThreeTrios.
+ */
+public class Player {
 
-  void addCard(Card card);
+  private ArrayList<Card> cardList;
+  private PlayerColor color;
 
-  void removeCard(Card card);
+  /**
+   * Constructs a new Player that can either be RED or BLUE.
+   * @param color Color of this player, RED or BLUE.
+   */
+  Player(PlayerColor color) {
+    this.cardList = new ArrayList<Card>();
+    this.color = color;
+  }
+
+  /**
+   * Adds a Card to this player's hand.
+   * @param card Card to be added.
+   */
+  public void addCard(Card card) {
+    cardList.add(card);
+  }
+
+  /**
+   * Removes a Card from this player's hand.
+   * @param card Card to be removed.
+   */
+  public void removeCard(Card card) {
+    cardList.remove(card);
+  }
+
+  /**
+   * Returns a copy of this player's hand.
+   * @return ArrayList of Cards in hand
+   */
+  public ArrayList<Card> getHand() {
+    return new ArrayList<Card>(cardList);
+  }
+
+  /**
+   * Returns the color of this player.
+   * @return PlayerColor either RED or BLUE.
+   */
+  public PlayerColor getColor() {
+    return color;
+  }
 
 }

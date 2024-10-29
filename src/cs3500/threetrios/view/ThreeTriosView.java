@@ -2,29 +2,36 @@ package cs3500.threetrios.view;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
+import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.CardCell;
 import cs3500.threetrios.model.Cell;
 import cs3500.threetrios.model.Hole;
 import cs3500.threetrios.model.IThreeTriosModel;
 import cs3500.threetrios.model.Player;
-import cs3500.threetrios.model.ThreeTriosModel;
 
+/**
+ * Represents a rudimentary text view of a game of ThreeTrios.
+ */
 public class ThreeTriosView {
 
-  private final IThreeTriosModel<?> model;
+  private final IThreeTriosModel model;
   private final Appendable appendable;
 
-  public ThreeTriosView() {
-
-  }
-
+  /**
+   * Constructs a view of the given model of ThreeTrios.
+   * @param model game model.
+   * @param ap appendable to add renderings to.
+   */
   public ThreeTriosView(IThreeTriosModel model, Appendable ap) {
     this.appendable = ap;
     this.model = model;
   }
 
+  /**
+   * Constructs a visual representation of the gamestate.
+   * @return String to be printed to show gamestate.
+   */
   public String toString() {
 
     StringBuilder gameState = new StringBuilder();
@@ -53,14 +60,20 @@ public class ThreeTriosView {
     gameState.append("Hand:\n");
 
     Player current;
-    if (Objects.equals(model.getTurn(), "RED")) {
 
+    for (Card card : model.getPlayerHand(model.getTurn())) {
+      gameState.append(card.toString() + "\n");
     }
 
-
-
+    return gameState.toString();
   }
 
-  public void render() throws IOException {}
+  /**
+   * Renders a view of the model to the appendable.
+   * @throws IOException if invalid input passed to appendable.
+   */
+  public void render() throws IOException {
+    this.appendable.append(this.toString());
+  }
 
 }

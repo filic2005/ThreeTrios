@@ -5,10 +5,10 @@ package cs3500.threetrios.model;
  */
 public class Card {
 
-  private final CardValues north;
-  private final CardValues east;
-  private final CardValues south;
-  private final CardValues west;
+  private final String north;
+  private final String east;
+  private final String south;
+  private final String west;
   private String name;
   private boolean owner; //true is Red, false is Blue
 
@@ -20,22 +20,23 @@ public class Card {
    * @param west direction value
    * @param name name of card
    */
-  Card(String name, CardValues north, CardValues south, CardValues east, CardValues west) {
+  Card(String name, String north, String south, String east, String west) {
     this.north = north;
     this.east = east;
     this.south = south;
     this.west = west;
     this.name = name;
+    this.owner = true;
   }
 
   /**
    * Initializes a Card object with all direction values set to ONE and owner set to BLUE.
    */
   Card() {
-    this.north = CardValues.ONE;
-    this.east = CardValues.ONE;
-    this.south = CardValues.ONE;
-    this.west = CardValues.ONE;
+    this.north = "1";
+    this.east = "1";
+    this.south = "1";
+    this.west = "1";
     this.name = "";
     this.owner = true;
   }
@@ -44,28 +45,28 @@ public class Card {
    * Retrieves this Card's numerical North value.
    */
   public int getNorth() {
-    return this.north.getValue();
+    return Integer.parseInt(this.north);
   }
 
   /**
    * Retrieves this Card's numerical West value.
    */
   public int getWest() {
-    return this.west.getValue();
+    return Integer.parseInt(this.west);
   }
 
   /**
    * Retrieves this Card's numerical South value.
    */
   public int getSouth() {
-    return this.south.getValue();
+    return Integer.parseInt(this.south);
   }
 
   /**
    * Retrieves this Card's numerical East value.
    */
   public int getEast() {
-    return this.east.getValue();
+    return Integer.parseInt(this.east);
   }
 
   /**
@@ -75,10 +76,18 @@ public class Card {
     return this.name;
   }
 
+  /**
+   * Allows the caller to set the owner of this card.
+   * @param owner true is RED, false is BLUE.
+   */
   public void setOwner(boolean owner) {
     this.owner = owner;
   }
 
+  /**
+   * Returns the owner of this card in one character.
+   * @return String, R for RED, B for BLUE. Used to help print out gamestate in view.
+   */
   public String getOwner() {
     if (owner) {
       return "R";
@@ -86,9 +95,13 @@ public class Card {
     return "B";
   }
 
+  /**
+   * Returns a visual representation of this Card's info.
+   * @return String Card's toString.
+   */
   public String toString() {
-    return name + " " + north.getValue() + " " + south.getValue()
-            + " " + east.getValue() + " " + west.getValue();
+    return name + " " + north + " " + south
+            + " " + east + " " + west;
   }
 
 }
