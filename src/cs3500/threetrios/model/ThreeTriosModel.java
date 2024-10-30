@@ -182,9 +182,56 @@ public class ThreeTriosModel implements IThreeTriosModel {
     }
 
     for (Cell cell : turnedCells) {
-      battle(cell.getLocation().getRow(), cell.getLocation().getCol());
+      battle(cell.getRow(), cell.getCol());
     }
 
+  }
+
+
+  @Override
+  public boolean isGameOver() {
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        if (grid.get(row).get(col) instanceof CardCell) {
+          if (((CardCell) grid.get(row).get(col)).getCard() == null) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  @Override
+  public String whoWonGame() {
+    if (!isGameOver()) {
+      throw new IllegalStateException("Game is not over!");
+    }
+
+    int redCount = redPlayer.getHand().size();
+    int blueCount = bluePlayer.getHand().size();
+
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        if (grid.get(row).get(col) instanceof CardCell) {
+          if (((CardCell) grid.get(row).get(col)).getCard().getOwner().equals("R")) {
+            redCount++;
+          } else {
+            blueCount++;
+          }
+        }
+      }
+    }
+
+    if (redCount > blueCount) {
+      return "Player RED wins.";
+    }
+
+    if (blueCount > redCount) {
+      return "Player BLUE wins.";
+    }
+
+    return "The game is a TIE.";
   }
 
 }

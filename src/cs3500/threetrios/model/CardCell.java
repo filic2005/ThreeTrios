@@ -5,39 +5,33 @@ package cs3500.threetrios.model;
  */
 public class CardCell implements Cell {
 
-  private final CartPt location;
   private Card card;
+  private final int row;
+  private final int col;
 
   /**
    * Constructs a CardCell with the given Card contained and a location.
    * @param card can either be a Card or null.
-   * @param location location of the Cell on the grid.
+   * @param row of cell
+   * @param col of cell
    */
-  CardCell(Card card, CartPt location) {
+  CardCell(Card card, int row, int col) {
     this.card = card;
-    this.location = location;
-  }
-
-  @Override
-  public CartPt getLocation() {
-    return this.location;
+    this.row = row;
+    this.col = col;
   }
 
   /**
    * Returns a copy of the card in this cell.
+   * Will only ever be called internally by the view, so alias is passed
+   * instead of a comment.
    * @return Card this Cell's card.
-   * @throws IllegalStateException if this cell has no card.
    */
   public Card getCard() {
     if (this.card == null) {
       return null;
-      // used to throw an exception but i changed it because the model
-      // determines what to do with null
     }
-    return new Card(this.card.getName(), String.valueOf(this.card.getNorth()),
-            String.valueOf(this.card.getSouth()),
-            String.valueOf(this.card.getEast()),
-            String.valueOf(this.card.getWest()));
+    return this.card;
   }
 
   /**
@@ -48,4 +42,14 @@ public class CardCell implements Cell {
     this.card = card;
   }
 
+
+  @Override
+  public int getRow() {
+    return row;
+  }
+
+  @Override
+  public int getCol() {
+    return col;
+  }
 }

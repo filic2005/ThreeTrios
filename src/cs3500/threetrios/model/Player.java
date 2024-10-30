@@ -40,15 +40,7 @@ public class Player {
    * @return ArrayList of Cards in hand
    */
   public ArrayList<Card> getHand() {
-    return new ArrayList<Card>(cardList);
-  }
-
-  /**
-   * Returns the color of this player.
-   * @return PlayerColor either RED or BLUE.
-   */
-  public PlayerColor getColor() {
-    return color;
+    return new ArrayList<>(cardList);
   }
 
 }
