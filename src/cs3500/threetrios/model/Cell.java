@@ -5,16 +5,7 @@ package cs3500.threetrios.model;
  */
 public interface Cell {
 
-  /**
-   *
-   * @return
-   */
   int getRow();
-
-  /**
-   *
-   * @return
-   */
   int getCol();
 
 }

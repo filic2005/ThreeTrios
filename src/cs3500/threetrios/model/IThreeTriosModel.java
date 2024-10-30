@@ -58,5 +58,20 @@ public interface IThreeTriosModel {
    * @param col col of Card doing battle.
    */
   void battle(int row, int col);
+
+  /**
+   * Determines whether the game is over.
+   * @return boolean true if the game is over, false if not.
+   */
+  public boolean isGameOver();
+
+  /**
+   * Determines who won the game, if it's over.
+   * @return String based on who won the game.
+   */
+  public String whoWonGame();
+
+
+
 }
 

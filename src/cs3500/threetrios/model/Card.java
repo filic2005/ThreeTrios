@@ -31,6 +31,7 @@ public class Card {
     this.owner = true;
   }
 
+
   /**
    * Retrieves this Card's numerical North value.
    */
@@ -88,13 +89,13 @@ public class Card {
 
   /**
    * Returns the owner of this card in one character.
-   * @return String, R for RED, B for BLUE. Used to help print out game state in view.
+   * @return String, R for RED, B for BLUE. Used to help print out gamestate in view.
    */
   public String getOwner() {
-    if (!owner) {
-      return "B";
+    if (this.owner) {
+      return "R";
     }
-    return "R";
+    return "B";
   }
 
   /**

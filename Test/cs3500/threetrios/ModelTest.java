@@ -2,6 +2,8 @@ package cs3500.threetrios;
 import cs3500.threetrios.model.CardCell;
 import cs3500.threetrios.model.ThreeTriosModel;
 import cs3500.threetrios.view.ThreeTriosView;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -81,7 +83,7 @@ public class ModelTest {
   }
 
   @Test
-  public void testChangeInTurn() {
+  public void testBattleMechanic() {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "22Cards");
     model.placeCard(0, 0, 0);
@@ -91,6 +93,13 @@ public class ModelTest {
     assertEquals("B", ((CardCell)model.getGrid().get(0).get(1)).getCard().getOwner());
   }
 
+  @Test
+  public void testNumCardCellOnBoard() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
+    assertEquals(16, model.numCardCellOnBoard());
+  }
+
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidPathNameInConstructor() {
     Random random = new Random(1);
@@ -98,19 +107,41 @@ public class ModelTest {
   }
 
   @Test
-  public void testBattleRecursionNoChange() {
+  public void testBattleRecursion() {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
+    ThreeTriosView view = new ThreeTriosView(model, new StringBuilder());
     System.out.println(model.getPlayerHand("RED"));
     System.out.println(model.getPlayerHand("BLUE"));
     model.placeCard(0, 0, 0);
     model.placeCard(0, 1, 0);
     model.placeCard(1, 0, 0);
     model.placeCard(1, 1, 0);
-    assertEquals("R", ((CardCell)model.getGrid().get(0).get(0)).getCard().getOwner());
-    assertEquals("B", ((CardCell)model.getGrid().get(0).get(1)).getCard().getOwner());
-    assertEquals("R", ((CardCell)model.getGrid().get(1).get(0)).getCard().getOwner());
-    assertEquals("B", ((CardCell)model.getGrid().get(1).get(1)).getCard().getOwner());
+
+    //write assert equals for card ownership, but the ownerships shouldn't change
+    assertEquals("R", ((CardCell) model.getGrid().get(0).get(0)).getCard().getOwner());
+    assertEquals("B", ((CardCell) model.getGrid().get(0).get(1)).getCard().getOwner());
+    assertEquals("R", ((CardCell) model.getGrid().get(1).get(0)).getCard().getOwner());
+    assertEquals("B", ((CardCell) model.getGrid().get(1).get(1)).getCard().getOwner());
+  }
+
+  @Test
+  public void testBattleRecursionCombo() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
+    ThreeTriosView view = new ThreeTriosView(model, new StringBuilder());
+    System.out.println(model.getPlayerHand("RED"));
+    System.out.println(model.getPlayerHand("BLUE"));
+    model.placeCard(0, 0, 0);
+    model.placeCard(1, 1, 0);
+    model.placeCard(1, 0, 0);
+    model.placeCard(2, 0, 1);
+
+    //write assert equals for card ownership, but the ownerships shouldn't change
+    assertEquals("B", ((CardCell) model.getGrid().get(0).get(0)).getCard().getOwner());
+    assertEquals("B", ((CardCell) model.getGrid().get(1).get(1)).getCard().getOwner());
+    assertEquals("B", ((CardCell) model.getGrid().get(1).get(0)).getCard().getOwner());
+    assertEquals("B", ((CardCell) model.getGrid().get(2).get(0)).getCard().getOwner());
   }
 
   @Test
@@ -141,6 +172,5 @@ public class ModelTest {
             + "Card6 4 8 1 3\n";
     assertEquals(expected, ap.toString());
   }
-
 
 }

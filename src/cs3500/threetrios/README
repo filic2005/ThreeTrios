@@ -7,7 +7,21 @@ This codebase includes a Model for managing game data, rules, and moves. It also
 for rendering the current game state. A controller will be implemented soon.
 
 Quick start:
-XXX
+
+@Test
+public void testCodeBase() {
+
+    IThreeTriosModel model = new ThreeTriosModel(
+                new Random(1),
+                "NoHolesBoard",
+                "17Cards");
+
+    ThreeTriosView view = new ThreeTriosView(model, new StringBuilder());
+
+    System.out.print(view);
+
+    model.placeCard(0, 0, 0);
+}
 
 Key components:
 

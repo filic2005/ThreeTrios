@@ -6,21 +6,25 @@ package cs3500.threetrios.model;
  */
 public class Hole implements Cell {
 
-  private final int row;
-  private final int col;
 
-  public Hole(int row, int col) {
+  int row;
+  int col;
+
+  /**
+   * Constructs a Hole with a passed location.
+   */
+  Hole(int row, int col) {
     this.row = row;
     this.col = col;
   }
 
   @Override
   public int getRow() {
-    return row;
+    return this.row;
   }
 
   @Override
   public int getCol() {
-    return col;
+    return this.col;
   }
 }

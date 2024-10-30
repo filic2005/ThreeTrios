@@ -21,6 +21,18 @@ public class ThreeTriosModel implements IThreeTriosModel {
   private boolean turn; //true is Red, false is Blue
 
   /**
+   * Constructs a new game of ThreesTrios given files
+   * representing the baord and cards to be used.
+   * This also instantiates the game board and player's hands (randomly
+   * dispersing the card based on a predetermined Random object).
+   * @param gridFile text file to store configuration of the board.
+   * @param cardDB text file to store card information used in the game.
+   */
+  public ThreeTriosModel(String gridFile, String cardDB) {
+    this(new Random(), gridFile, cardDB);
+  }
+
+  /**
    * Constructs a new game of ThreeTrios given a Random object,
    * and files representing the board and cards to be used.
    * This also instantiates the game board and players' hands.
@@ -175,11 +187,8 @@ public class ThreeTriosModel implements IThreeTriosModel {
 
   }
 
-  /**
-   *
-   *
-   * @return
-   */
+
+  @Override
   public boolean isGameOver() {
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
@@ -193,11 +202,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
     return true;
   }
 
-  /**
-   *
-   *
-   * @return
-   */
+  @Override
   public String whoWonGame() {
     if (!isGameOver()) {
       throw new IllegalStateException("Game is not over!");
