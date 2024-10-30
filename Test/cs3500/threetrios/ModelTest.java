@@ -17,16 +17,16 @@ public class ModelTest {
     assertEquals(16, model.numCardCellOnBoard());
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testConstructorInvalidGridFile() {
     Random random = new Random(1);
-    assertThrows(IllegalArgumentException.class, () -> new ThreeTriosModel(random, "invalid_grid.txt", "test_cards.txt"));
+    ThreeTriosModel model = new ThreeTriosModel(random, "invalid_grid.txt", "test_cards.txt");
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testConstructorInvalidCardDBFile() {
     Random random = new Random(1);
-    assertThrows(IllegalArgumentException.class, () -> new ThreeTriosModel(random, "test_grid.txt", "invalid_cards.txt"));
+    ThreeTriosModel model = new ThreeTriosModel(random, "test_grid.txt", "invalid_cards.txt");
   }
 
   @Test
