@@ -36,23 +36,45 @@ public class Reader {
     FileReader reader = new FileReader(gridConfig);
     Scanner in = new Scanner(reader);
 
+    if (!in.hasNextInt()) {
+      throw new IllegalArgumentException("Expected integer for rows");
+    }
     int rows = Integer.parseInt(in.next());
+
+    if (!in.hasNextInt()) {
+      throw new IllegalArgumentException("Expected integer for columns");
+    }
     int cols = Integer.parseInt(in.next());
+
+    if (rows <= 0 || cols <= 0) {
+      throw new IllegalArgumentException("Rows and columns must be positive.");
+    }
     in.nextLine();
 
+    // Initialize the grid structure
     for (int i = 0; i < rows; i++) {
       grid.add(new ArrayList<>());
     }
 
+    // Parse each line of the grid
     for (int row = 0; row < rows; row++) {
-      String line = in.nextLine();
+      if (!in.hasNextLine()) {
+        throw new IllegalArgumentException("Expected more rows in grid data but reached end of file");
+      }
+      String line = in.nextLine().trim();
+
+      if (line.length() != cols) {
+        throw new IllegalArgumentException("Row " + row + " does not match expected column count of " + cols);
+      }
+
       for (int col = 0; col < cols; col++) {
-        Character input = line.charAt(col);
-        if (input.equals('C')) {
+        char input = line.charAt(col);
+        if (input == 'C') {
           grid.get(row).add(col, new CardCell(null, row, col));
-        }
-        if (input.equals('X')) {
+        } else if (input == 'X') {
           grid.get(row).add(col, new Hole(row, col));
+        } else {
+          throw new IllegalArgumentException("Invalid character '" + input + "' at row " + row + ", column " + col + ". Expected 'C' or 'X'.");
         }
       }
     }
@@ -69,25 +91,29 @@ public class Reader {
    * @throws FileNotFoundException when the path given is invalid.
    */
   public ArrayList<Card> createHands(String cardDB, Random random) throws FileNotFoundException {
-
     ArrayList<Card> cardList = new ArrayList<>();
 
     File cards = new File(cardDB);
     FileReader reader = new FileReader(cards);
     Scanner in = new Scanner(reader);
 
-    while(in.hasNext()) {
-      String text = in.nextLine();
+    while (in.hasNextLine()) {
+      String text = in.nextLine().trim();
+
+      if (text.isEmpty()) {
+        continue;
+      }
+
       String[] cardInfo = text.split(" ");
 
-      cardList.add(new Card(cardInfo[0], cardInfo[1],
-              cardInfo[2], cardInfo[3],
-              cardInfo[4]));
+      if (cardInfo.length != 5) {
+        throw new IllegalArgumentException("Invalid card format in line: " + text + ". Expected 5 elements, found " + cardInfo.length);
+      }
+
+      cardList.add(new Card(cardInfo[0], cardInfo[1], cardInfo[2], cardInfo[3], cardInfo[4]));
     }
 
     Collections.shuffle(cardList, random);
-
     return cardList;
   }
-
 }

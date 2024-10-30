@@ -14,11 +14,12 @@ public class ThreeTriosModel implements IThreeTriosModel {
   private final ArrayList<ArrayList<Cell>> grid;
   private final int rows;
   private final int cols;
-  private ArrayList<Card> cardList;
+  private ArrayList<Card> cardList; //the list of all cards that can be used in this game
   private final Player bluePlayer;
   private final Player redPlayer;
   private final int gridCount;
-  private boolean turn; //true is Red, false is Blue
+  //INVARIANT: true is ALWAYS Red, false is ALWAYS Blue, and this is ensured throughout the entire codebase.
+  private boolean turn;
 
   /**
    * Constructs a new game of ThreesTrios given files

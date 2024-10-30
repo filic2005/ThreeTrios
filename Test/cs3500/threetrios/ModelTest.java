@@ -203,4 +203,15 @@ public class ModelTest {
     assertEquals(expected, ap.toString());
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testBadFormatBoardFile() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "BadFormatBoard", "17Cards");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testBadFormatCardsFile() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "BadFormatCards");
+  }
 }
