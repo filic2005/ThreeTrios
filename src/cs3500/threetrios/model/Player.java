@@ -7,16 +7,15 @@ import java.util.ArrayList;
  */
 public class Player {
 
-  private ArrayList<Card> cardList;
-  private PlayerColor color;
+  private final ArrayList<Card> cardList;
 
   /**
    * Constructs a new Player that can either be RED or BLUE.
-   * @param color Color of this player, RED or BLUE.
+   * Player does not need to know which player they are, that's the models job.
+   *
    */
-  Player(PlayerColor color) {
-    this.cardList = new ArrayList<Card>();
-    this.color = color;
+  Player() {
+    this.cardList = new ArrayList<>();
   }
 
   /**

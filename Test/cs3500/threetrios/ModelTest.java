@@ -62,8 +62,10 @@ public class ModelTest {
   public void testPlaceCardOutOfBounds() {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
-    assertThrows(IllegalArgumentException.class, () -> model.placeCard(-1, 0, 0));
-    assertThrows(IllegalArgumentException.class, () -> model.placeCard(model.getGrid().size(), 0, 0));
+    assertThrows(IllegalArgumentException.class,
+            () -> model.placeCard(-1, 0, 0));
+    assertThrows(IllegalArgumentException.class,
+            () -> model.placeCard(model.getGrid().size(), 0, 0));
   }
 
   @Test(expected = IllegalStateException.class)
@@ -79,7 +81,6 @@ public class ModelTest {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "ConnectedHolesBoard", "22Cards");
     model.placeCard(0, 5, 0);
-    //Grid initialization might be backwards, not sure if columns and rows are swapped.
   }
 
   @Test
@@ -118,7 +119,6 @@ public class ModelTest {
     model.placeCard(1, 0, 0);
     model.placeCard(1, 1, 0);
 
-    //write assert equals for card ownership, but the ownerships shouldn't change
     assertEquals("R", ((CardCell) model.getGrid().get(0).get(0)).getCard().getOwner());
     assertEquals("B", ((CardCell) model.getGrid().get(0).get(1)).getCard().getOwner());
     assertEquals("R", ((CardCell) model.getGrid().get(1).get(0)).getCard().getOwner());
@@ -129,7 +129,6 @@ public class ModelTest {
   public void testBattleRecursionCombo() {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
-    ThreeTriosView view = new ThreeTriosView(model, new StringBuilder());
     System.out.println(model.getPlayerHand("RED"));
     System.out.println(model.getPlayerHand("BLUE"));
     model.placeCard(0, 0, 0);
@@ -137,7 +136,6 @@ public class ModelTest {
     model.placeCard(1, 0, 0);
     model.placeCard(2, 0, 1);
 
-    //write assert equals for card ownership, but the ownerships shouldn't change
     assertEquals("B", ((CardCell) model.getGrid().get(0).get(0)).getCard().getOwner());
     assertEquals("B", ((CardCell) model.getGrid().get(1).get(1)).getCard().getOwner());
     assertEquals("B", ((CardCell) model.getGrid().get(1).get(0)).getCard().getOwner());
@@ -164,6 +162,38 @@ public class ModelTest {
             + "Hand:\n"
             + "Card12 5 6 A 3\n"
             + "Card10 9 4 2 A\n"
+            + "Card4 7 A 3 5\n"
+            + "Card1 5 3 A 2\n"
+            + "Card3 8 1 4 A\n"
+            + "Card9 3 A 7 8\n"
+            + "Card14 A 3 1 8\n"
+            + "Card6 4 8 1 3\n";
+    assertEquals(expected, ap.toString());
+  }
+
+  @Test
+  public void testPlayedGameStateView() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
+    model.placeCard(0, 0, 0);
+    model.placeCard(0, 1, 0);
+    model.placeCard(1, 0, 0);
+    model.placeCard(1, 1, 0);
+
+    Appendable ap = new StringBuilder();
+    ThreeTriosView view = new ThreeTriosView(model, ap);
+
+    try {
+      view.render();
+    } catch(IOException ignored) {
+    }
+
+    String expected = "Player: RED\n"
+            + "RB__\n"
+            + "RB__\n"
+            + "____\n"
+            + "____\n"
+            + "Hand:\n"
             + "Card4 7 A 3 5\n"
             + "Card1 5 3 A 2\n"
             + "Card3 8 1 4 A\n"

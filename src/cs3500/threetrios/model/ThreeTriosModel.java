@@ -44,8 +44,8 @@ public class ThreeTriosModel implements IThreeTriosModel {
    */
   public ThreeTriosModel(Random r, String gridFile, String cardDB) {
     cardList = new ArrayList<>();
-    this.bluePlayer = new Player(PlayerColor.BLUE);
-    this.redPlayer = new Player(PlayerColor.RED);
+    this.bluePlayer = new Player();
+    this.redPlayer = new Player();
     this.turn = true;
 
     try {
@@ -63,8 +63,10 @@ public class ThreeTriosModel implements IThreeTriosModel {
     }
   }
 
-  @Override
-  public void dealToPlayers() {
+  /**
+   * Takes this model's list of cards and deals them out to both players.
+   */
+  private void dealToPlayers() {
     int playerCards = (gridCount + 1) /2;
     for (int i = 0; i < playerCards; i++) {
       cardList.get(0).setOwner(true);
