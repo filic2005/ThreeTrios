@@ -13,8 +13,8 @@ public void testCodeBase() {
 
     IThreeTriosModel model = new ThreeTriosModel(
                 new Random(1),
-                "src/cs3500/threetrios/model/configfiles/gridFile1.txt",
-                "src/cs3500/threetrios/model/configfiles/cardDB1.txt");
+                "NoHolesBoard",
+                "17Cards");
 
     ThreeTriosView view = new ThreeTriosView(model, new StringBuilder());
 
