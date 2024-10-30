@@ -11,7 +11,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
 
   //the outer arraylist represents the left column, inner represents the rows
   //0-indexed
-  private ArrayList<ArrayList<Cell>> grid;
+  private final ArrayList<ArrayList<Cell>> grid;
   private final int rows;
   private final int cols;
   private ArrayList<Card> cardList;
@@ -23,15 +23,15 @@ public class ThreeTriosModel implements IThreeTriosModel {
   /**
    * Constructs a new game of ThreeTrios given a Random object,
    * and files representing the board and cards to be used.
-   * This also instantiates the gameboard and players' hands.
+   * This also instantiates the game board and players' hands.
    * @param r Random object to shuffle cards.
    * @param gridFile text file to store configuration of the board.
    * @param cardDB text file to store card information used in the game.
    * @throws IllegalArgumentException if config files produce invalid game info.
    * @throws IllegalArgumentException if the passed path names are invalid.
    */
-  ThreeTriosModel(Random r, String gridFile, String cardDB) {
-    cardList = new ArrayList<Card>();
+  public ThreeTriosModel(Random r, String gridFile, String cardDB) {
+    cardList = new ArrayList<>();
     this.bluePlayer = new Player(PlayerColor.BLUE);
     this.redPlayer = new Player(PlayerColor.RED);
     this.turn = true;
@@ -42,7 +42,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
       this.cols = grid.get(0).size();
       this.cardList = new Reader().createHands(cardDB, r);
       this.gridCount = numCardCellOnBoard();
-      if (gridCount % 2 == 0 || cardList.size() < gridCount + 1) {
+      if (cardList.size() < gridCount + 1) {
         throw new IllegalArgumentException("Invalid config files");
       }
       this.dealToPlayers();
@@ -110,7 +110,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
 
     if (grid.get(row).get(col) instanceof CardCell) {
 
-      if ( ((CardCell) grid.get(row).get(col)).getCard() != null) {
+      if (((CardCell) grid.get(row).get(col)).getCard() != null) {
         throw new IllegalStateException("Cell already has a card!");
       }
 
@@ -134,7 +134,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
   public void battle(int row, int col) {
 
     CardCell battler = (CardCell) grid.get(row).get(col);
-    ArrayList<Cell> turnedCells = new ArrayList<Cell>();
+    ArrayList<Cell> turnedCells = new ArrayList<>();
 
     if (row - 1 >= 0 && grid.get(row - 1).get(col) instanceof CardCell) {
       CardCell north = (CardCell) grid.get(row - 1).get(col);

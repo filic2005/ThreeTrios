@@ -1,5 +1,7 @@
 package cs3500.threetrios.model;
 
+import java.util.Objects;
+
 /**
  * Represents a Card in the ThreeTrios game.
  */
@@ -9,7 +11,7 @@ public class Card {
   private final String east;
   private final String south;
   private final String west;
-  private String name;
+  private final String name;
   private boolean owner; //true is Red, false is Blue
 
   /**
@@ -45,6 +47,9 @@ public class Card {
    * Retrieves this Card's numerical North value.
    */
   public int getNorth() {
+    if (Objects.equals(this.north, "A")) {
+      return 10;
+    }
     return Integer.parseInt(this.north);
   }
 
@@ -52,6 +57,9 @@ public class Card {
    * Retrieves this Card's numerical West value.
    */
   public int getWest() {
+    if (Objects.equals(this.west, "A")) {
+      return 10;
+    }
     return Integer.parseInt(this.west);
   }
 
@@ -59,6 +67,9 @@ public class Card {
    * Retrieves this Card's numerical South value.
    */
   public int getSouth() {
+    if (Objects.equals(this.south, "A")) {
+      return 10;
+    }
     return Integer.parseInt(this.south);
   }
 
@@ -66,6 +77,9 @@ public class Card {
    * Retrieves this Card's numerical East value.
    */
   public int getEast() {
+    if (Objects.equals(this.east, "A")) {
+      return 10;
+    }
     return Integer.parseInt(this.east);
   }
 

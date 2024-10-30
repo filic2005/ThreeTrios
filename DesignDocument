@@ -1,0 +1,9 @@
+Players:
+
+Players are represented as an object that contains a color representing which player the object
+is referring to. Players also contain a list of cards that represents their hand. This list is added
+to when the model deals the cards, and it is removed from when the player plays a card to the board.
+
+When constructing a model, a random, a card file, and a board file are passed to the constructor,
+and the model will create two players, one blue and one red, and set them as fields. The model
+will then use these two fields to distinguish player moves.

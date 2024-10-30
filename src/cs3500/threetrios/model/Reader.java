@@ -30,7 +30,7 @@ public class Reader {
    */
   public ArrayList<ArrayList<Cell>> createGrid(String gridFile) throws FileNotFoundException {
 
-    ArrayList<ArrayList<Cell>> grid = new ArrayList<ArrayList<Cell>>();
+    ArrayList<ArrayList<Cell>> grid = new ArrayList<>();
 
     File gridConfig = new File(gridFile);
     FileReader reader = new FileReader(gridConfig);
@@ -38,13 +38,14 @@ public class Reader {
 
     int rows = Integer.parseInt(in.next());
     int cols = Integer.parseInt(in.next());
+    in.nextLine();
 
     for (int i = 0; i < rows; i++) {
-      grid.add(new ArrayList<Cell>());
+      grid.add(new ArrayList<>());
     }
 
     for (int row = 0; row < rows; row++) {
-      String line = in.next();
+      String line = in.nextLine();
       for (int col = 0; col < cols; col++) {
         Character input = line.charAt(col);
         if (input.equals('C')) {
@@ -70,7 +71,7 @@ public class Reader {
    */
   public ArrayList<Card> createHands(String cardDB, Random random) throws FileNotFoundException {
 
-    ArrayList<Card> cardList = new ArrayList<Card>();
+    ArrayList<Card> cardList = new ArrayList<>();
 
     File cards = new File(cardDB);
     FileReader reader = new FileReader(cards);

@@ -30,7 +30,9 @@ public class CardCell implements Cell {
    */
   public Card getCard() {
     if (this.card == null) {
-      throw new IllegalStateException("No card in this cell!");
+      return null;
+      // used to throw an exception but i changed it because the model
+      // determines what to do with null
     }
     return new Card(this.card.getName(), String.valueOf(this.card.getNorth()),
             String.valueOf(this.card.getSouth()),
