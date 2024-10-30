@@ -63,7 +63,8 @@ public class ModelTest {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
     assertThrows(IllegalArgumentException.class, () -> model.placeCard(-1, 0, 0));
-    assertThrows(IllegalArgumentException.class, () -> model.placeCard(model.getGrid().size(), 0, 0));
+    assertThrows(IllegalArgumentException.class,
+            () -> model.placeCard(model.getGrid().size(), 0, 0));
   }
 
   @Test(expected = IllegalStateException.class)
@@ -172,5 +173,55 @@ public class ModelTest {
             + "Card6 4 8 1 3\n";
     assertEquals(expected, ap.toString());
   }
+
+  @Test
+  public void testGameTieAndOver() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "2x2Board", "17Cards");
+    Appendable ap = new StringBuilder();
+    ThreeTriosView view = new ThreeTriosView(model, ap);
+
+    System.out.println(model.getPlayerHand("RED"));
+    System.out.println(model.getPlayerHand("BLUE"));
+
+    model.placeCard(0, 0, 0);
+    model.placeCard(0, 1, 0);
+    model.placeCard(1, 1, 0);
+    model.placeCard(1, 0, 0);
+    assertEquals(true, model.isGameOver());
+    assertEquals("The game is a TIE.", model.whoWonGame());
+  }
+
+  @Test
+  public void testGameWinAndOver() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "2x2Board", "17Cards");
+    Appendable ap = new StringBuilder();
+    ThreeTriosView view = new ThreeTriosView(model, ap);
+
+    System.out.println(model.getPlayerHand("RED"));
+    System.out.println(model.getPlayerHand("BLUE"));
+
+    System.out.println(view.toString());
+    model.placeCard(1, 0, 1);
+    model.placeCard(0, 0, 1);
+    model.placeCard(0, 1, 0);
+    model.placeCard(1, 1, 0);
+    assertTrue(model.isGameOver());
+    assertEquals("Player BLUE wins.", model.whoWonGame());
+  }
+
+
+
+  @Test (expected = IllegalStateException.class)
+  public void whoWonGameEarlyException() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "2x2Board", "17Cards");
+    Appendable ap = new StringBuilder();
+    ThreeTriosView view = new ThreeTriosView(model, ap);
+    model.whoWonGame();
+  }
+
+
 
 }

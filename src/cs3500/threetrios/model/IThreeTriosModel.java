@@ -7,10 +7,6 @@ import java.util.ArrayList;
  */
 public interface IThreeTriosModel {
 
-  /**
-   * Takes this model's list of cards and deals them out to both players.
-   */
-  void dealToPlayers();
 
   /**
    * Counts the number of CardCells on the model's grid and
@@ -68,6 +64,7 @@ public interface IThreeTriosModel {
   /**
    * Determines who won the game, if it's over.
    * @return String based on who won the game.
+   * @throws IllegalStateException if game isn't over yet.
    */
   public String whoWonGame();
 

@@ -9,20 +9,21 @@ import java.util.Random;
  */
 public class ThreeTriosModel implements IThreeTriosModel {
 
-  //the outer arraylist represents the left column, inner represents the rows
+  //the outer arraylist represents the rows, inner represents the column values
   //0-indexed
-  private final ArrayList<ArrayList<Cell>> grid;
+  private final ArrayList<ArrayList<Cell>> grid; //
   private final int rows;
   private final int cols;
-  private ArrayList<Card> cardList;
+  private ArrayList<Card> cardList; //The list of all cards that can be used in the game
   private final Player bluePlayer;
   private final Player redPlayer;
   private final int gridCount;
   private boolean turn; //true is Red, false is Blue
+  //INVARIANT: true is ALWAYS Red, false is ALWAYS Blue, and this is ensured throughout the entire codebase.
 
   /**
    * Constructs a new game of ThreesTrios given files
-   * representing the baord and cards to be used.
+   * representing the board and cards to be used.
    * This also instantiates the game board and player's hands (randomly
    * dispersing the card based on a predetermined Random object).
    * @param gridFile text file to store configuration of the board.
@@ -44,8 +45,8 @@ public class ThreeTriosModel implements IThreeTriosModel {
    */
   public ThreeTriosModel(Random r, String gridFile, String cardDB) {
     cardList = new ArrayList<>();
-    this.bluePlayer = new Player(PlayerColor.BLUE);
-    this.redPlayer = new Player(PlayerColor.RED);
+    this.bluePlayer = new Player();
+    this.redPlayer = new Player();
     this.turn = true;
 
     try {
@@ -63,8 +64,10 @@ public class ThreeTriosModel implements IThreeTriosModel {
     }
   }
 
-  @Override
-  public void dealToPlayers() {
+  /**
+   * Takes this model's list of cards and deals them out to both players.
+   */
+  private void dealToPlayers() {
     int playerCards = (gridCount + 1) /2;
     for (int i = 0; i < playerCards; i++) {
       cardList.get(0).setOwner(true);
