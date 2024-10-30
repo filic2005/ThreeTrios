@@ -27,6 +27,7 @@ public class Reader {
    * @param gridFile text file path.
    * @return 2D ArrayList of the grid
    * @throws FileNotFoundException when the path is invalid.
+   * If the file given isn't the correct format, nothing is done.
    */
   public ArrayList<ArrayList<Cell>> createGrid(String gridFile) throws FileNotFoundException {
 

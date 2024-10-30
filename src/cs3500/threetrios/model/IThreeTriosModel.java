@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 public interface IThreeTriosModel {
 
+
   /**
    * Counts the number of CardCells on the model's grid and
    * alters the gridCount field to reflect that.
@@ -58,13 +59,14 @@ public interface IThreeTriosModel {
    * Determines whether the game is over.
    * @return boolean true if the game is over, false if not.
    */
-  boolean isGameOver();
+  public boolean isGameOver();
 
   /**
    * Determines who won the game, if it's over.
    * @return String based on who won the game.
+   * @throws IllegalStateException if game isn't over yet.
    */
-  String whoWonGame();
+  public String whoWonGame();
 
 
 

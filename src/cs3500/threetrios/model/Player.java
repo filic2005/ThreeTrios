@@ -10,12 +10,10 @@ public class Player {
   private final ArrayList<Card> cardList;
 
   /**
-   * Constructs a new Player that can either be RED or BLUE.
-   * Player does not need to know which player they are, that's the models job.
-   *
+   * Constructs a new Player with an empty hand.
    */
   Player() {
-    this.cardList = new ArrayList<>();
+    this.cardList = new ArrayList<Card>();
   }
 
   /**
