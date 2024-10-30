@@ -118,7 +118,6 @@ public class ThreeTriosModel implements IThreeTriosModel {
         ((CardCell) grid.get(row).get(col)).setCard(redPlayer.getHand().get(handIdx));
         redPlayer.removeCard(redPlayer.getHand().get(handIdx));
       } else {
-        bluePlayer.setCardOwner(handIdx, false);
         ((CardCell) grid.get(row).get(col)).setCard(bluePlayer.getHand().get(handIdx));
         bluePlayer.removeCard(bluePlayer.getHand().get(handIdx));
       }
@@ -171,16 +170,63 @@ public class ThreeTriosModel implements IThreeTriosModel {
     }
 
     for (Cell cell : turnedCells) {
-      battle(cell.getLocation().getRow(), cell.getLocation().getCol());
+      battle(cell.getRow(), cell.getCol());
     }
 
   }
 
-  //StartGame
-  //IsGameOver
-  //WhoWonGame
-  //ask about what do anything for incorrect file means
-  //the choice of component for your classes that read files
-  //Ask about providing copies vs actual object in helper classes.
+  /**
+   *
+   *
+   * @return
+   */
+  public boolean isGameOver() {
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        if (grid.get(row).get(col) instanceof CardCell) {
+          if (((CardCell) grid.get(row).get(col)).getCard() == null) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  /**
+   *
+   *
+   * @return
+   */
+  public String whoWonGame() {
+    if (!isGameOver()) {
+      throw new IllegalStateException("Game is not over!");
+    }
+
+    int redCount = redPlayer.getHand().size();
+    int blueCount = bluePlayer.getHand().size();
+
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        if (grid.get(row).get(col) instanceof CardCell) {
+          if (((CardCell) grid.get(row).get(col)).getCard().getOwner().equals("R")) {
+            redCount++;
+          } else {
+            blueCount++;
+          }
+        }
+      }
+    }
+
+    if (redCount > blueCount) {
+      return "Player RED wins.";
+    }
+
+    if (blueCount > redCount) {
+      return "Player BLUE wins.";
+    }
+
+    return "The game is a TIE.";
+  }
 
 }

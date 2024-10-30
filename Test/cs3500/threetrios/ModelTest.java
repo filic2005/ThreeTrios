@@ -88,7 +88,7 @@ public class ModelTest {
     assertEquals("R", ((CardCell)model.getGrid().get(0).get(0)).getCard().getOwner());
     assertEquals("BLUE", model.getTurn());
     model.placeCard(0, 1, 0);
-    assertEquals("R", ((CardCell)model.getGrid().get(0).get(1)).getCard().getOwner());
+    assertEquals("B", ((CardCell)model.getGrid().get(0).get(1)).getCard().getOwner());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -107,23 +107,10 @@ public class ModelTest {
     model.placeCard(0, 1, 0);
     model.placeCard(1, 0, 0);
     model.placeCard(1, 1, 0);
-    assertEquals("R", ((CardCell)model.getGrid().get(0).get(0)).getCardOwner());
-    assertEquals("B", ((CardCell)model.getGrid().get(0).get(1)).getCardOwner());
-    assertEquals("R", ((CardCell)model.getGrid().get(1).get(0)).getCardOwner());
-    assertEquals("B", ((CardCell)model.getGrid().get(1).get(1)).getCardOwner());
-  }
-
-  @Test
-  public void testBattleRecursion() {
-    Random random = new Random(2);
-    ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
-    System.out.println(model.getPlayerHand("RED"));
-    System.out.println(model.getPlayerHand("BLUE"));
-    model.placeCard(0, 0, 0);
-    model.placeCard(0, 1, 0);
-    model.placeCard(1, 0, 0);
-    model.placeCard(1, 1, 0);
-
+    assertEquals("R", ((CardCell)model.getGrid().get(0).get(0)).getCard().getOwner());
+    assertEquals("B", ((CardCell)model.getGrid().get(0).get(1)).getCard().getOwner());
+    assertEquals("R", ((CardCell)model.getGrid().get(1).get(0)).getCard().getOwner());
+    assertEquals("B", ((CardCell)model.getGrid().get(1).get(1)).getCard().getOwner());
   }
 
   @Test
@@ -154,4 +141,6 @@ public class ModelTest {
             + "Card6 4 8 1 3\n";
     assertEquals(expected, ap.toString());
   }
+
+
 }

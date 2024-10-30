@@ -49,16 +49,15 @@ public class Reader {
       for (int col = 0; col < cols; col++) {
         Character input = line.charAt(col);
         if (input.equals('C')) {
-          grid.get(row).add(col, new CardCell(null, new CartPt(row, col)));
+          grid.get(row).add(col, new CardCell(null, row, col));
         }
         if (input.equals('X')) {
-          grid.get(row).add(col, new Hole(new CartPt(row, col)));
+          grid.get(row).add(col, new Hole(row, col));
         }
       }
     }
 
     return grid;
-
   }
 
   /**

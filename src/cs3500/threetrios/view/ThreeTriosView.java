@@ -45,7 +45,7 @@ public class ThreeTriosView {
         if (grid.get(row).get(col) instanceof CardCell) {
 
           if (((CardCell) grid.get(row).get(col)).getCard() != null) {
-            gameState.append(((CardCell) grid.get(row).get(col)).getCardOwner());
+            gameState.append(((CardCell) grid.get(row).get(col)).getCard().getOwner());
           } else if (((CardCell) grid.get(row).get(col)).getCard() == null) {
             gameState.append("_");
           }

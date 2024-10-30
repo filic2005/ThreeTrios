@@ -58,9 +58,5 @@ public interface IThreeTriosModel {
    * @param col col of Card doing battle.
    */
   void battle(int row, int col);
-
-
-
-
 }
 

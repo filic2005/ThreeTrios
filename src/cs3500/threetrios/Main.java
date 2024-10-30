@@ -1,12 +1,10 @@
-package cs3500.threetrios.model;
+package cs3500.threetrios;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 
+import cs3500.threetrios.model.IThreeTriosModel;
+import cs3500.threetrios.model.ThreeTriosModel;
 import cs3500.threetrios.view.ThreeTriosView;
 
 

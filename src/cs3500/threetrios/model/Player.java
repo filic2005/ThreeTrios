@@ -40,22 +40,8 @@ public class Player {
    * @return ArrayList of Cards in hand
    */
   public ArrayList<Card> getHand() {
-    return new ArrayList<Card>(cardList);
+    return new ArrayList<>(cardList);
   }
 
-  /**
-   * Returns the color of this player.
-   * @return PlayerColor either RED or BLUE.
-   */
-  public PlayerColor getColor() {
-    return color;
-  }
-
-  /**
-   * Sets the owner of a specific card in the hand.
-   */
-  public void setCardOwner(int index, boolean owner) {
-    this.cardList.get(index).setOwner(owner);
-  }
 
 }

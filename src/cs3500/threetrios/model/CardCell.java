@@ -5,52 +5,30 @@ package cs3500.threetrios.model;
  */
 public class CardCell implements Cell {
 
-  private final CartPt location;
   private Card card;
+  private final int row;
+  private final int col;
 
   /**
    * Constructs a CardCell with the given Card contained and a location.
    * @param card can either be a Card or null.
-   * @param location location of the Cell on the grid.
    */
-  CardCell(Card card, CartPt location) {
+  CardCell(Card card, int row, int col) {
     this.card = card;
-    this.location = location;
+    this.row = row;
+    this.col = col;
   }
 
-  @Override
-  public CartPt getLocation() {
-    return this.location;
-  }
 
   /**
    * Returns a copy of the card in this cell.
    * @return Card this Cell's card.
-   * @throws IllegalStateException if this cell has no card.
    */
   public Card getCard() {
     if (this.card == null) {
       return null;
-      // used to throw an exception but i changed it because the model
-      // determines what to do with null
     }
-    return new Card(this.card.getName(), String.valueOf(this.card.getNorth()),
-            String.valueOf(this.card.getSouth()),
-            String.valueOf(this.card.getEast()),
-            String.valueOf(this.card.getWest()));
-  }
-
-  /**
-   * Sets the card in the cell to a certain owner.
-   *
-   * @param owner the owner you want to set the card to
-   */
-  public void setCardOwner(boolean owner) {
-    if (this.card != null) {
-      this.card.setOwner(owner);
-    } else {
-      throw new IllegalStateException("There is no card to set the owner of.");
-    }
+    return this.card;
   }
 
   /**
@@ -61,13 +39,13 @@ public class CardCell implements Cell {
     this.card = card;
   }
 
-  /**
-   * Gets the card owner of this card.
-   *
-   * @return the card owner
-   */
-  public String getCardOwner() {
-    return (this.card.getOwner());
+  @Override
+  public int getRow() {
+    return row;
   }
 
+  @Override
+  public int getCol() {
+    return col;
+  }
 }

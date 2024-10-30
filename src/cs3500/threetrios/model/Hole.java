@@ -6,19 +6,21 @@ package cs3500.threetrios.model;
  */
 public class Hole implements Cell {
 
-  private final CartPt location;
+  private final int row;
+  private final int col;
 
-  /**
-   * Constructs a Hole with a passed location.
-   * @param location location of the hole on the board.
-   */
-  Hole(CartPt location) {
-    this.location = location;
+  public Hole(int row, int col) {
+    this.row = row;
+    this.col = col;
   }
 
   @Override
-  public CartPt getLocation() {
-    return this.location;
+  public int getRow() {
+    return row;
   }
 
+  @Override
+  public int getCol() {
+    return col;
+  }
 }
