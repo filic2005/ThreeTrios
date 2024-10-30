@@ -59,7 +59,6 @@ public class Reader {
     }
 
     return grid;
-
   }
 
   /**

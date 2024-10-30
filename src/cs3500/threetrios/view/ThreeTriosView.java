@@ -8,7 +8,6 @@ import cs3500.threetrios.model.CardCell;
 import cs3500.threetrios.model.Cell;
 import cs3500.threetrios.model.Hole;
 import cs3500.threetrios.model.IThreeTriosModel;
-import cs3500.threetrios.model.Player;
 
 /**
  * Represents a rudimentary text view of a game of ThreeTrios.
@@ -42,7 +41,9 @@ public class ThreeTriosView {
 
     for (int row = 0; row < grid.size(); row++) {
       for (int col = 0; col < grid.get(0).size(); col++) {
+
         if (grid.get(row).get(col) instanceof CardCell) {
+
           if (((CardCell) grid.get(row).get(col)).getCard() != null) {
             gameState.append(((CardCell) grid.get(row).get(col)).getCard().getOwner());
           } else if (((CardCell) grid.get(row).get(col)).getCard() == null) {
@@ -58,8 +59,6 @@ public class ThreeTriosView {
     }
 
     gameState.append("Hand:\n");
-
-    Player current;
 
     for (Card card : model.getPlayerHand(model.getTurn())) {
       gameState.append(card.toString() + "\n");
