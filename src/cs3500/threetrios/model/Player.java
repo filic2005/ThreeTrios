@@ -7,15 +7,15 @@ import java.util.ArrayList;
  */
 public class Player {
 
-  private ArrayList<Card> cardList;
-  private PlayerColor color;
+  private final ArrayList<Card> cardList;
+  private final PlayerColor color;
 
   /**
    * Constructs a new Player that can either be RED or BLUE.
    * @param color Color of this player, RED or BLUE.
    */
   Player(PlayerColor color) {
-    this.cardList = new ArrayList<Card>();
+    this.cardList = new ArrayList<>();
     this.color = color;
   }
 
@@ -49,6 +49,13 @@ public class Player {
    */
   public PlayerColor getColor() {
     return color;
+  }
+
+  /**
+   * Sets the owner of a specific card in the hand.
+   */
+  public void setCardOwner(int index, boolean owner) {
+    this.cardList.get(index).setOwner(owner);
   }
 
 }

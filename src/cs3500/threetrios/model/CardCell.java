@@ -41,11 +41,33 @@ public class CardCell implements Cell {
   }
 
   /**
+   * Sets the card in the cell to a certain owner.
+   *
+   * @param owner the owner you want to set the card to
+   */
+  public void setCardOwner(boolean owner) {
+    if (this.card != null) {
+      this.card.setOwner(owner);
+    } else {
+      throw new IllegalStateException("There is no card to set the owner of.");
+    }
+  }
+
+  /**
    * Sets the card field of this cell to the given Card.
    * @param card Card to be put in this cell.
    */
   public void setCard(Card card) {
     this.card = card;
+  }
+
+  /**
+   * Gets the card owner of this card.
+   *
+   * @return the card owner
+   */
+  public String getCardOwner() {
+    return (this.card.getOwner());
   }
 
 }

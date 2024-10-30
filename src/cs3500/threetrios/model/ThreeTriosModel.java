@@ -118,6 +118,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
         ((CardCell) grid.get(row).get(col)).setCard(redPlayer.getHand().get(handIdx));
         redPlayer.removeCard(redPlayer.getHand().get(handIdx));
       } else {
+        bluePlayer.setCardOwner(handIdx, false);
         ((CardCell) grid.get(row).get(col)).setCard(bluePlayer.getHand().get(handIdx));
         bluePlayer.removeCard(bluePlayer.getHand().get(handIdx));
       }
@@ -174,5 +175,12 @@ public class ThreeTriosModel implements IThreeTriosModel {
     }
 
   }
+
+  //StartGame
+  //IsGameOver
+  //WhoWonGame
+  //ask about what do anything for incorrect file means
+  //the choice of component for your classes that read files
+  //Ask about providing copies vs actual object in helper classes.
 
 }

@@ -32,18 +32,6 @@ public class Card {
   }
 
   /**
-   * Initializes a Card object with all direction values set to ONE and owner set to BLUE.
-   */
-  Card() {
-    this.north = "1";
-    this.east = "1";
-    this.south = "1";
-    this.west = "1";
-    this.name = "";
-    this.owner = true;
-  }
-
-  /**
    * Retrieves this Card's numerical North value.
    */
   public int getNorth() {
@@ -100,13 +88,13 @@ public class Card {
 
   /**
    * Returns the owner of this card in one character.
-   * @return String, R for RED, B for BLUE. Used to help print out gamestate in view.
+   * @return String, R for RED, B for BLUE. Used to help print out game state in view.
    */
   public String getOwner() {
-    if (owner) {
-      return "R";
+    if (!owner) {
+      return "B";
     }
-    return "B";
+    return "R";
   }
 
   /**
