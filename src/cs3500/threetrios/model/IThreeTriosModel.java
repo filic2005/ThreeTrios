@@ -22,7 +22,7 @@ public interface IThreeTriosModel {
 
   /**
    * Returns a copy of the grid for observation.
-   * @return ArrayList<ArrayList<Cell> copy of game grid.
+   * @return a 2D ArrayList of Card copy of game grid.
    */
   ArrayList<ArrayList<Cell>> getGrid();
 
@@ -42,7 +42,7 @@ public interface IThreeTriosModel {
   /**
    * Returns the specified player's hand.
    * @param player String, either RED or BLUE
-   * @return ArrayList<Card> of player's hand if valid input is given.
+   * @return an ArrayList of Card of player's hand if valid input is given.
    * @throws IllegalArgumentException if invalid player name is given.
    */
   ArrayList<Card> getPlayerHand(String player);

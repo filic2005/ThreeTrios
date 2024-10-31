@@ -5,7 +5,7 @@ package cs3500.threetrios.model;
  */
 public class CardCell implements Cell {
 
-  private Card card;
+  private Card card; //make Optional? Lets us not use null for empty cells.
   private final int row;
   private final int col;
 
@@ -24,7 +24,7 @@ public class CardCell implements Cell {
   /**
    * Returns a copy of the card in this cell.
    * Will only ever be called internally by the view, so alias is passed
-   * instead of a comment.
+   * instead of a copy.
    * @return Card this Cell's card.
    */
   public Card getCard() {

@@ -8,19 +8,35 @@ Overview:
 Quick start:
 
 @Test
-public void testCodeBase() {
+  public void testInitialGameStateView() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
+    Appendable ap = new StringBuilder();
+    ThreeTriosView view = new ThreeTriosView(model, ap);
 
-    IThreeTriosModel model = new ThreeTriosModel(
-                new Random(1),
-                "src/cs3500/threetrios/model/configfiles/gridFile1.txt",
-                "src/cs3500/threetrios/model/configfiles/cardDB1.txt");
+    try {
+      view.render();
+    } catch (IOException ignored) {
+    }
 
-    ThreeTriosView view = new ThreeTriosView(model, new StringBuilder());
-
-    System.out.print(view);
+    String expected = "Player: RED\n"
+            + "____\n"
+            + "____\n"
+            + "____\n"
+            + "____\n"
+            + "Hand:\n"
+            + "Card12 5 6 A 3\n"
+            + "Card10 9 4 2 A\n"
+            + "Card4 7 A 3 5\n"
+            + "Card1 5 3 A 2\n"
+            + "Card3 8 1 4 A\n"
+            + "Card9 3 A 7 8\n"
+            + "Card14 A 3 1 8\n"
+            + "Card6 4 8 1 3\n";
+    assertEquals(expected, ap.toString());
 
     model.placeCard(0, 0, 0);
-}
+  }
 
 
 Key components:

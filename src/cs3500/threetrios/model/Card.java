@@ -17,9 +17,9 @@ public class Card {
   /**
    * Constructs a Card object given specific direction and owner values.
    * Since A represents the value 10, we believed that it would be redundant to represent
-   * Card Values using an enum since it would require you to go back and forth to retrieve values and set values,
-   * so we decided that it would be more efficient to ensure a correct range of values manually rather than have
-   * java ensure it for us.
+   * Card Values using an enum since it would require you to go back and forth to retrieve values
+   * and set values, so we decided that it would be more efficient to ensure a correct range of
+   * values manually rather than have java ensure it for us.
    *
    * @param north direction value
    * @param east direction value

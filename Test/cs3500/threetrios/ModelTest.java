@@ -1,16 +1,21 @@
 package cs3500.threetrios;
+
 import cs3500.threetrios.model.CardCell;
 import cs3500.threetrios.model.ThreeTriosModel;
 import cs3500.threetrios.view.ThreeTriosView;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 
+/**
+ * Test class for ThreeTrios implementation.
+ */
 public class ModelTest {
 
   @Test
@@ -25,13 +30,15 @@ public class ModelTest {
   @Test(expected = IllegalArgumentException.class)
   public void testConstructorInvalidGridFile() {
     Random random = new Random(1);
-    ThreeTriosModel model = new ThreeTriosModel(random, "invalid_grid.txt", "test_cards.txt");
+    ThreeTriosModel model = new ThreeTriosModel(random,
+            "invalid_grid.txt", "test_cards.txt");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testConstructorInvalidCardDBFile() {
     Random random = new Random(1);
-    ThreeTriosModel model = new ThreeTriosModel(random, "test_grid.txt", "invalid_cards.txt");
+    ThreeTriosModel model = new ThreeTriosModel(random,
+            "test_grid.txt", "invalid_cards.txt");
   }
 
   @Test
@@ -47,7 +54,7 @@ public class ModelTest {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
     assertEquals("RED", model.getTurn());
-    model.placeCard(1, 1, 0); // Example placement to change turn
+    model.placeCard(1, 1, 0);
     assertEquals("BLUE", model.getTurn());
   }
 
@@ -63,9 +70,9 @@ public class ModelTest {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
     assertThrows(IllegalArgumentException.class,
-            () -> model.placeCard(-1, 0, 0));
+        () -> model.placeCard(-1, 0, 0));
     assertThrows(IllegalArgumentException.class,
-            () -> model.placeCard(model.getGrid().size(), 0, 0));
+        () -> model.placeCard(model.getGrid().size(), 0, 0));
   }
 
   @Test(expected = IllegalStateException.class)
@@ -79,7 +86,8 @@ public class ModelTest {
   @Test(expected = IllegalStateException.class)
   public void testPlaceCardInvalidCellType() {
     Random random = new Random(1);
-    ThreeTriosModel model = new ThreeTriosModel(random, "ConnectedHolesBoard", "22Cards");
+    ThreeTriosModel model = new ThreeTriosModel(random, "ConnectedHolesBoard",
+            "22Cards");
     model.placeCard(0, 5, 0);
   }
 
@@ -104,7 +112,8 @@ public class ModelTest {
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidPathNameInConstructor() {
     Random random = new Random(1);
-    ThreeTriosModel model = new ThreeTriosModel(random, "invalid_path", "invalid_path");
+    ThreeTriosModel model = new ThreeTriosModel(random, "invalid_path",
+            "invalid_path");
   }
 
   @Test
@@ -151,7 +160,7 @@ public class ModelTest {
 
     try {
       view.render();
-    } catch(IOException ignored) {
+    } catch (IOException ignored) {
     }
 
     String expected = "Player: RED\n"
@@ -185,7 +194,7 @@ public class ModelTest {
 
     try {
       view.render();
-    } catch(IOException ignored) {
+    } catch (IOException ignored) {
     }
 
     String expected = "Player: RED\n"
@@ -201,6 +210,60 @@ public class ModelTest {
             + "Card14 A 3 1 8\n"
             + "Card6 4 8 1 3\n";
     assertEquals(expected, ap.toString());
+  }
+
+  @Test (expected = IllegalStateException.class)
+  public void whoWonGameEarlyException() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "2x2Board", "17Cards");
+    Appendable ap = new StringBuilder();
+    ThreeTriosView view = new ThreeTriosView(model, ap);
+    model.whoWonGame();
+  }
+
+  @Test
+  public void testGameTieAndOver() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "2x2Board", "17Cards");
+    Appendable ap = new StringBuilder();
+
+    System.out.println(model.getPlayerHand("RED"));
+    System.out.println(model.getPlayerHand("BLUE"));
+
+    model.placeCard(0, 0, 0);
+    model.placeCard(0, 1, 0);
+    model.placeCard(1, 1, 0);
+    model.placeCard(1, 0, 0);
+    assertEquals(true, model.isGameOver());
+    assertEquals("The game is a TIE.", model.whoWonGame());
+  }
+
+  @Test
+  public void testGameWinAndOver() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "2x2Board", "17Cards");
+    Appendable ap = new StringBuilder();
+    ThreeTriosView view = new ThreeTriosView(model, ap);
+    model.placeCard(1, 0, 1);
+    model.placeCard(0, 0, 1);
+    model.placeCard(0, 1, 0);
+    model.placeCard(1, 1, 0);
+    assertEquals(true, model.isGameOver());
+    assertEquals("Player BLUE wins.", model.whoWonGame());
+  }
+
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testBadFomatBoard() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "BadFormatBoard", "17Cards");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testBadFormatCards() {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random, "2x2Board",
+            "BadFormatCards");
   }
 
 }

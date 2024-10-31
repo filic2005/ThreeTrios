@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Represents the concrete model of a game of ThreeTrios
+ * Represents the concrete model of a game of ThreeTrios.
  */
 public class ThreeTriosModel implements IThreeTriosModel {
 
@@ -19,6 +19,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
   private final Player redPlayer;
   private final int gridCount;
   private boolean turn; //true is Red, false is Blue
+  //INVARIANT: true is ALWAYS Red, false is ALWAYS Blue and this is maintained by our codebase
 
   /**
    * Constructs a new game of ThreesTrios given files
@@ -67,7 +68,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
    * Takes this model's list of cards and deals them out to both players.
    */
   private void dealToPlayers() {
-    int playerCards = (gridCount + 1) /2;
+    int playerCards = (gridCount + 1) / 2;
     for (int i = 0; i < playerCards; i++) {
       cardList.get(0).setOwner(true);
       redPlayer.addCard(cardList.remove(0));
