@@ -145,8 +145,13 @@ public class ThreeTriosModel implements IThreeTriosModel {
     turn = !turn;
   }
 
-  @Override
-  public void battle(int row, int col) {
+  /**
+   * Takes in coordinates for a Cell's Card and does battle with the adjacent Cards,
+   * changing Card ownership accordingly and calling battle on Cards that got flipped.
+   * @param row row of Card doing battle.
+   * @param col col of Card doing battle.
+   */
+  private void battle(int row, int col) {
 
     CardCell battler = (CardCell) grid.get(row).get(col);
     ArrayList<Cell> turnedCells = new ArrayList<>();
