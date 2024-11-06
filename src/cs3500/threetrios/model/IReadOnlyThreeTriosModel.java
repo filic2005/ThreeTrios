@@ -37,6 +37,48 @@ public interface IReadOnlyThreeTriosModel {
   boolean isGameOver();
 
   /**
+   *
+   * @param player
+   * @return
+   */
+  int playerOwnedCards(boolean player);
+
+  /**
+   *
+   * @return
+   */
+  int getRows();
+
+  /**
+   *
+   * @return
+   */
+  int getCols();
+
+  /**
+   *
+   * @param row
+   * @param col
+   * @param card
+   * @return
+   */
+  int getCardsFlipped(int row, int col, Card card);
+
+  /**
+   *
+   * @param row
+   * @param col
+   */
+  void isLegalMove(int row, int col);
+
+  /**
+   *
+   *
+   * @return
+   */
+  ArrayList<ArrayList<Cell>> getGridCopy();
+
+  /**
    * Determines who won the game, if it's over.
    * @return String based on who won the game.
    * @throws IllegalStateException if game isn't over yet.

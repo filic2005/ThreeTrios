@@ -1,5 +1,7 @@
 package cs3500.threetrios.model;
 
+import java.util.ArrayList;
+
 /**
  * Represents a game of ThreeTrios.
  */

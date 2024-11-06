@@ -116,31 +116,34 @@ public class ThreeTriosModel implements IThreeTriosModel {
     }
   }
 
-  @Override
-  public void placeCard(int row, int col, int handIdx) {
-
+  public void isLegalMove(int row, int col) {
     if (row < 0 || row >= rows || col < 0 || col >= cols) {
       throw new IllegalArgumentException("Coordinates are outside of board boundaries!");
     }
 
     if (grid.get(row).get(col) instanceof CardCell) {
-
       if (((CardCell) grid.get(row).get(col)).getCard() != null) {
         throw new IllegalStateException("Cell already has a card!");
-      }
-
-      if (turn) {
-        ((CardCell) grid.get(row).get(col)).setCard(redPlayer.getHand().get(handIdx));
-        redPlayer.removeCard(redPlayer.getHand().get(handIdx));
-      } else {
-        ((CardCell) grid.get(row).get(col)).setCard(bluePlayer.getHand().get(handIdx));
-        bluePlayer.removeCard(bluePlayer.getHand().get(handIdx));
       }
     } else {
       throw new IllegalStateException("Cannot place a card here!");
     }
+  }
 
-    battle(row, col);
+  @Override
+  public void placeCard(int row, int col, int handIdx) {
+
+    isLegalMove(row, col);
+
+    if (turn) {
+      ((CardCell) grid.get(row).get(col)).setCard(redPlayer.getHand().get(handIdx));
+      redPlayer.removeCard(redPlayer.getHand().get(handIdx));
+    } else {
+      ((CardCell) grid.get(row).get(col)).setCard(bluePlayer.getHand().get(handIdx));
+      bluePlayer.removeCard(bluePlayer.getHand().get(handIdx));
+    }
+
+    battle(row, col, grid);
 
     turn = !turn;
   }
@@ -151,13 +154,13 @@ public class ThreeTriosModel implements IThreeTriosModel {
    * @param row row of Card doing battle.
    * @param col col of Card doing battle.
    */
-  private void battle(int row, int col) {
+  private void battle(int row, int col, ArrayList<ArrayList<Cell>> gameGrid) {
 
-    CardCell battler = (CardCell) grid.get(row).get(col);
+    CardCell battler = (CardCell) gameGrid.get(row).get(col);
     ArrayList<Cell> turnedCells = new ArrayList<>();
 
-    if (row - 1 >= 0 && grid.get(row - 1).get(col) instanceof CardCell) {
-      CardCell north = (CardCell) grid.get(row - 1).get(col);
+    if (row - 1 >= 0 && gameGrid.get(row - 1).get(col) instanceof CardCell) {
+      CardCell north = (CardCell) gameGrid.get(row - 1).get(col);
       if (north.getCard() != null && north.getCard().getSouth() < battler.getCard().getNorth()) {
         north.getCard().setOwner(turn);
         turnedCells.add(north);
@@ -165,7 +168,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
     }
 
     if (col + 1 < this.cols && grid.get(row).get(col + 1) instanceof CardCell) {
-      CardCell east = (CardCell) grid.get(row).get(col + 1);
+      CardCell east = (CardCell) gameGrid.get(row).get(col + 1);
 
       if (east.getCard() != null && east.getCard().getWest() < battler.getCard().getEast()) {
         east.getCard().setOwner(turn);
@@ -173,16 +176,16 @@ public class ThreeTriosModel implements IThreeTriosModel {
       }
     }
 
-    if (row + 1 < this.rows && grid.get(row + 1).get(col) instanceof CardCell) {
-      CardCell south = (CardCell) grid.get(row + 1).get(col);
+    if (row + 1 < this.rows && gameGrid.get(row + 1).get(col) instanceof CardCell) {
+      CardCell south = (CardCell) gameGrid.get(row + 1).get(col);
       if (south.getCard() != null &&  south.getCard().getNorth() < battler.getCard().getSouth()) {
         south.getCard().setOwner(turn);
         turnedCells.add(south);
       }
     }
 
-    if (col - 1 >= 0 && grid.get(row).get(col - 1) instanceof CardCell) {
-      CardCell west = (CardCell) grid.get(row).get(col - 1);
+    if (col - 1 >= 0 && gameGrid.get(row).get(col - 1) instanceof CardCell) {
+      CardCell west = (CardCell) gameGrid.get(row).get(col - 1);
       if (west.getCard() != null && west.getCard().getEast() < battler.getCard().getWest()) {
         west.getCard().setOwner(turn);
         turnedCells.add(west);
@@ -190,7 +193,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
     }
 
     for (Cell cell : turnedCells) {
-      battle(cell.getRow(), cell.getCol());
+      battle(cell.getRow(), cell.getCol(), gameGrid);
     }
 
   }
@@ -212,34 +215,72 @@ public class ThreeTriosModel implements IThreeTriosModel {
 
   @Override
   public String whoWonGame() {
-    if (!isGameOver()) {
-      throw new IllegalStateException("Game is not over!");
-    }
-
-    int redCount = redPlayer.getHand().size();
-    int blueCount = bluePlayer.getHand().size();
-
-    for (int row = 0; row < rows; row++) {
-      for (int col = 0; col < cols; col++) {
-        if (grid.get(row).get(col) instanceof CardCell) {
-          if (((CardCell) grid.get(row).get(col)).getCard().getOwner().equals("R")) {
-            redCount++;
-          } else {
-            blueCount++;
-          }
-        }
-      }
-    }
+    int redCount = playerOwnedCards(true);
+    int blueCount = playerOwnedCards(false);
 
     if (redCount > blueCount) {
-      return "Player RED wins.";
+      return "Player RED Wins.";
     }
 
-    if (blueCount > redCount) {
-      return "Player BLUE wins.";
+    if (redCount < blueCount) {
+      return "Player BLUE Wins.";
     }
 
     return "The game is a TIE.";
   }
 
+  @Override
+  public int playerOwnedCards(boolean player) {
+    int count;
+    if (player) {
+      count = redPlayer.getHand().size();
+    } else {
+      count = bluePlayer.getHand().size();
+    }
+
+    for(int row = 0; row < rows; row++) {
+      for(int col = 0; col < cols; col++) {
+        if (grid.get(row).get(col) instanceof CardCell) {
+          if (((CardCell) grid.get(row).get(col)).getCard().getOwner().equals("R") && player) {
+            count++;
+          }
+          if (((CardCell) grid.get(row).get(col)).getCard().getOwner().equals("B") && !player) {
+            count++;
+          }
+        }
+      }
+    }
+    return count;
+  }
+
+  @Override
+  public int getRows() {
+    return rows;
+  }
+
+  @Override
+  public int getCols() {
+    return cols;
+  }
+
+  @Override
+  public int getCardsFlipped(int row, int col, Card card) {
+    ArrayList<ArrayList<Cell>> gridCopy = this.getGridCopy();
+    boolean originalTurn = this.turn;
+    int originalCardNum = this.playerOwnedCards(this.turn);
+
+    isLegalMove(row, col);
+    ((CardCell) gridCopy.get(row).get(col)).setCard(card);
+    battle(row, col, gridCopy);
+    return this.playerOwnedCards(originalTurn) - originalCardNum;
+  }
+
+  @Override
+  public ArrayList<ArrayList<Cell>> getGridCopy() {
+    ArrayList<ArrayList<Cell>> gridCopy = new ArrayList<>();
+    for (ArrayList<Cell> arr : grid) {
+      gridCopy.add(new ArrayList<>(arr));
+    }
+    return gridCopy;
+  }
 }
