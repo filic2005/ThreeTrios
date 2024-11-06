@@ -47,9 +47,9 @@ public class BoardPanel extends JPanel implements IBoardPanel {
           g2.setStroke(new BasicStroke(4));
           g2.drawRect(x, y, cellWidth, cellHeight);
         } else {
-          g2.setColor(Color.BLACK);  // Set normal border color
-          g2.setStroke(new BasicStroke(1));  // Default border thickness
-          g2.drawRect(x, y, cellWidth, cellHeight);  // Draw normal border
+          g2.setColor(Color.BLACK);
+          g2.setStroke(new BasicStroke(1));
+          g2.drawRect(x, y, cellWidth, cellHeight);
         }
       }
     }
