@@ -41,12 +41,16 @@ public class BoardPanel extends JPanel implements IBoardPanel {
         int x = col * cellWidth;
         int y = row * cellHeight;
 
+        // Highlight the cell if it's selected
         if (row == highlightedRow && col == highlightedCol) {
-          g2.setColor(Color.BLACK);
-          g2.fillRect(x, y, cellWidth, cellHeight);
+          g2.setColor(Color.YELLOW);
+          g2.setStroke(new BasicStroke(4));
+          g2.drawRect(x, y, cellWidth, cellHeight);
+        } else {
+          g2.setColor(Color.BLACK);  // Set normal border color
+          g2.setStroke(new BasicStroke(1));  // Default border thickness
+          g2.drawRect(x, y, cellWidth, cellHeight);  // Draw normal border
         }
-        g2.setColor(Color.YELLOW);
-        g2.drawRect(x, y, cellWidth, cellHeight);
       }
     }
   }
