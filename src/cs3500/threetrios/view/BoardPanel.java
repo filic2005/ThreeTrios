@@ -1,11 +1,14 @@
 package cs3500.threetrios.view;
 
+import cs3500.threetrios.model.CardCell;
+import cs3500.threetrios.model.Cell;
 import cs3500.threetrios.model.IReadOnlyThreeTriosModel;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 /**
  *
@@ -72,10 +75,13 @@ public class BoardPanel extends JPanel implements IBoardPanel {
       int row = e.getY() / cellHeight;
 
       if (row < rows && col < cols) {
-        highlightedRow = row;
-        highlightedCol = col;
-        System.out.println("Clicked cell at (" + row + ", " + col + ")");
-        repaint();
+        ArrayList<ArrayList<Cell>> grid = model.getGrid();
+        if (grid.get(row).get(col) instanceof CardCell) {
+          highlightedRow = row;
+          highlightedCol = col;
+          System.out.println("Clicked cell at (" + row + ", " + col + ")");
+          repaint();
+        }
       }
     }
   }
