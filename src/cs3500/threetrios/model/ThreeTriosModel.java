@@ -68,8 +68,13 @@ public class ThreeTriosModel implements IThreeTriosModel {
    * Takes this model's list of cards and deals them out to both players.
    */
   private void dealToPlayers() {
-    int playerCards = (gridCount + 1) / 2;
-    for (int i = 0; i < playerCards; i++) {
+    int cards = (gridCount + 1);
+    int playerCards = cards / 2;
+    int redCards = playerCards;
+    if (cards % 2 != 0) {
+      redCards += 1;
+    }
+    for (int i = 0; i < redCards; i++) {
       cardList.get(0).setOwner(true);
       redPlayer.addCard(cardList.remove(0));
     }
