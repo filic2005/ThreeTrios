@@ -277,7 +277,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
     isLegalMove(row, col);
     ((CardCell) gridCopy.get(row).get(col)).setCard(card);
     battle(row, col, gridCopy);
-    return this.playerOwnedCards(originalTurn) - originalCardNum;
+    return this.playerOwnedCards(originalTurn) - originalCardNum - 1;
   }
 
   @Override
