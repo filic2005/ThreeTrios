@@ -38,10 +38,12 @@ public interface IReadOnlyThreeTriosModel {
 
   /**
    *
+   *
    * @param player
+   * @param tempGrid
    * @return
    */
-  int playerOwnedCards(boolean player);
+  int playerOwnedCards(boolean player, ArrayList<ArrayList<Cell>> tempGrid);
 
   /**
    *

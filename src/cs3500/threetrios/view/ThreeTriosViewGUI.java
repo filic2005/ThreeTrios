@@ -19,8 +19,8 @@ public class ThreeTriosViewGUI extends JFrame implements IThreeTriosViewGUI {
 
     this.setLayout(new BorderLayout());
     boardPanel = new BoardPanel(model);
-    leftHandPanel = new HandPanel(model, "RED");
-    rightHandPanel = new HandPanel(model, "BLUE");
+    leftHandPanel = new HandPanel(model, "R");
+    rightHandPanel = new HandPanel(model, "B");
 
     this.add(leftHandPanel, BorderLayout.WEST);
     this.add(boardPanel, BorderLayout.CENTER);

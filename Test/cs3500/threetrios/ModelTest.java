@@ -23,8 +23,8 @@ public class ModelTest {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
     assertNotNull(model.getGrid());
-    assertEquals("RED", model.getTurn());
-    assertEquals(16, model.numCardCellOnBoard());
+    assertEquals("R", model.getTurn());
+    assertEquals(9, model.numCardCellOnBoard());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -45,17 +45,17 @@ public class ModelTest {
   public void testDealToPlayers() {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
-    assertEquals((model.numCardCellOnBoard() + 1) / 2, model.getPlayerHand("RED").size());
-    assertEquals((model.numCardCellOnBoard() + 1) / 2, model.getPlayerHand("BLUE").size());
+    assertEquals(5, model.getPlayerHand("R").size());
+    assertEquals(5, model.getPlayerHand("B").size());
   }
 
   @Test
   public void testGetTurn() {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
-    assertEquals("RED", model.getTurn());
+    assertEquals("R", model.getTurn());
     model.placeCard(1, 1, 0);
-    assertEquals("BLUE", model.getTurn());
+    assertEquals("B", model.getTurn());
   }
 
   @Test
@@ -97,7 +97,7 @@ public class ModelTest {
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "22Cards");
     model.placeCard(0, 0, 0);
     assertEquals("R", ((CardCell)model.getGrid().get(0).get(0)).getCard().getOwner());
-    assertEquals("BLUE", model.getTurn());
+    assertEquals("B", model.getTurn());
     model.placeCard(0, 1, 0);
     assertEquals("B", ((CardCell)model.getGrid().get(0).get(1)).getCard().getOwner());
   }
@@ -106,7 +106,7 @@ public class ModelTest {
   public void testNumCardCellOnBoard() {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
-    assertEquals(16, model.numCardCellOnBoard());
+    assertEquals(9, model.numCardCellOnBoard());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -121,16 +121,16 @@ public class ModelTest {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
     ThreeTriosView view = new ThreeTriosView(model, new StringBuilder());
-    System.out.println(model.getPlayerHand("RED"));
-    System.out.println(model.getPlayerHand("BLUE"));
+    System.out.println(model.getPlayerHand("R"));
+    System.out.println(model.getPlayerHand("B"));
     model.placeCard(0, 0, 0);
     model.placeCard(0, 1, 0);
     model.placeCard(1, 0, 0);
     model.placeCard(1, 1, 0);
 
-    assertEquals("R", ((CardCell) model.getGrid().get(0).get(0)).getCard().getOwner());
+    assertEquals("B", ((CardCell) model.getGrid().get(0).get(0)).getCard().getOwner());
     assertEquals("B", ((CardCell) model.getGrid().get(0).get(1)).getCard().getOwner());
-    assertEquals("R", ((CardCell) model.getGrid().get(1).get(0)).getCard().getOwner());
+    assertEquals("B", ((CardCell) model.getGrid().get(1).get(0)).getCard().getOwner());
     assertEquals("B", ((CardCell) model.getGrid().get(1).get(1)).getCard().getOwner());
   }
 
@@ -138,16 +138,16 @@ public class ModelTest {
   public void testBattleRecursionCombo() {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, "NoHolesBoard", "17Cards");
-    System.out.println(model.getPlayerHand("RED"));
-    System.out.println(model.getPlayerHand("BLUE"));
+    System.out.println(model.getPlayerHand("R"));
+    System.out.println(model.getPlayerHand("B"));
     model.placeCard(0, 0, 0);
     model.placeCard(1, 1, 0);
     model.placeCard(1, 0, 0);
     model.placeCard(2, 0, 1);
 
-    assertEquals("B", ((CardCell) model.getGrid().get(0).get(0)).getCard().getOwner());
+    assertEquals("R", ((CardCell) model.getGrid().get(0).get(0)).getCard().getOwner());
     assertEquals("B", ((CardCell) model.getGrid().get(1).get(1)).getCard().getOwner());
-    assertEquals("B", ((CardCell) model.getGrid().get(1).get(0)).getCard().getOwner());
+    assertEquals("R", ((CardCell) model.getGrid().get(1).get(0)).getCard().getOwner());
     assertEquals("B", ((CardCell) model.getGrid().get(2).get(0)).getCard().getOwner());
   }
 
@@ -164,19 +164,16 @@ public class ModelTest {
     }
 
     String expected = "Player: RED\n"
-            + "____\n"
-            + "____\n"
-            + "____\n"
-            + "____\n"
+            + "___\n"
+            + "___\n"
+            + "___\n"
             + "Hand:\n"
             + "Card12 5 6 A 3\n"
             + "Card10 9 4 2 A\n"
             + "Card4 7 A 3 5\n"
             + "Card1 5 3 A 2\n"
-            + "Card3 8 1 4 A\n"
-            + "Card9 3 A 7 8\n"
-            + "Card14 A 3 1 8\n"
-            + "Card6 4 8 1 3\n";
+            + "Card3 8 1 4 A\n";
+
     assertEquals(expected, ap.toString());
   }
 
@@ -198,42 +195,26 @@ public class ModelTest {
     }
 
     String expected = "Player: RED\n"
-            + "RB__\n"
-            + "RB__\n"
-            + "____\n"
-            + "____\n"
+            + "BB_\n"
+            + "BB_\n"
+            + "___\n"
             + "Hand:\n"
             + "Card4 7 A 3 5\n"
             + "Card1 5 3 A 2\n"
-            + "Card3 8 1 4 A\n"
-            + "Card9 3 A 7 8\n"
-            + "Card14 A 3 1 8\n"
-            + "Card6 4 8 1 3\n";
+            + "Card3 8 1 4 A\n";
     assertEquals(expected, ap.toString());
   }
-
-//  @Test (expected = IllegalStateException.class)
-//  public void whoWonGameEarlyException() {
-//    Random random = new Random(1);
-//    ThreeTriosModel model = new ThreeTriosModel(random, "2x2Board", "17Cards");
-//    Appendable ap = new StringBuilder();
-//    ThreeTriosView view = new ThreeTriosView(model, ap);
-//    model.whoWonGame();
-//  }
 
   @Test
   public void testGameTieAndOver() {
     Random random = new Random(1);
-    ThreeTriosModel model = new ThreeTriosModel(random, "2x2Board", "17Cards");
+    ThreeTriosModel model = new ThreeTriosModel(random, "1x1TestBoard", "17Cards");
     Appendable ap = new StringBuilder();
 
-    System.out.println(model.getPlayerHand("RED"));
-    System.out.println(model.getPlayerHand("BLUE"));
+    System.out.println(model.getPlayerHand("R"));
+    System.out.println(model.getPlayerHand("B"));
 
     model.placeCard(0, 0, 0);
-    model.placeCard(0, 1, 0);
-    model.placeCard(1, 1, 0);
-    model.placeCard(1, 0, 0);
     assertEquals(true, model.isGameOver());
     assertEquals("The game is a TIE.", model.whoWonGame());
   }
@@ -248,7 +229,7 @@ public class ModelTest {
     model.placeCard(0, 1, 0);
     model.placeCard(1, 1, 0);
     assertEquals(true, model.isGameOver());
-    assertEquals("Player BLUE Wins.", model.whoWonGame());
+    assertEquals("Player RED Wins.", model.whoWonGame());
   }
 
 

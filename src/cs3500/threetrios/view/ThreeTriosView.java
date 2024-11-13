@@ -35,7 +35,13 @@ public class ThreeTriosView {
 
     StringBuilder gameState = new StringBuilder();
 
-    gameState.append("Player: ").append(model.getTurn()).append("\n");
+    String turn = model.getTurn();
+
+    if (turn.equals("R")) {
+      gameState.append("Player: ").append("RED").append("\n");
+    } else {
+      gameState.append("Player: ").append("BLUE").append("\n");
+    }
 
     ArrayList<ArrayList<Cell>> grid = model.getGrid();
 

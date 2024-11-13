@@ -7,17 +7,19 @@ public class FlipMaxCards implements ThreeTriosStrategy{
   public RobotMove chooseMove(IReadOnlyThreeTriosModel model, String player) {
     ArrayList<ArrayList<Cell>> grid = model.getGrid();
     ArrayList<Card> cards = model.getPlayerHand(player);
-    int maxFlipped = 0;
-    int maxRow = 0;
-    int maxCol = 0;
-    int handIdx = 0;
+    int maxFlipped = -1;
+    int maxRow = -1;
+    int maxCol = -1;
+    int handIdx = -1;
     for (int i = 0; i < cards.size(); i++) {
       Card card = cards.get(i);
 
       for (int row = 0; row < grid.size(); row++) {
         for (int col = 0; col < grid.get(row).size(); col++) {
+
           if (grid.get(row).get(col) instanceof CardCell) {
             if (((CardCell) grid.get(row).get(col)).getCard() == null) {
+
               int flipped = model.getCardsFlipped(row, col, card);
               if (flipped > maxFlipped) {
                 maxFlipped = flipped;
@@ -36,6 +38,20 @@ public class FlipMaxCards implements ThreeTriosStrategy{
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    }
+
+    if (maxRow == -1 || maxCol == -1) {
+      for (int row = 0; row < grid.size(); row++) {
+        for (int col = 0; col < grid.get(row).size(); col++) {
+          if (grid.get(row).get(col) instanceof CardCell) {
+            if (((CardCell) grid.get(row).get(col)).getCard() == null) {
+              maxRow = row;
+              maxCol = col;
+              handIdx = 0;
             }
           }
         }

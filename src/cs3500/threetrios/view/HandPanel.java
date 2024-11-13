@@ -37,7 +37,10 @@ public class HandPanel extends JPanel implements IHandPanel {
     Graphics2D g2 = (Graphics2D) g;
 
     int cardWidth = getWidth();
-    int cardHeight = getHeight() / model.getPlayerHand(player).size();
+    int cardHeight = 0;
+    if (!model.getPlayerHand(player).isEmpty()) {
+      cardHeight = getHeight() / model.getPlayerHand(player).size();
+    }
 
     for (int card = 0; card < model.getPlayerHand(player).size(); card++) {
       int x = 0;
@@ -63,7 +66,7 @@ public class HandPanel extends JPanel implements IHandPanel {
     int cardHeight = getHeight() / model.getPlayerHand(player).size();
 
     Card card = model.getPlayerHand(player).get(index);
-    if (player.equals("RED")) {
+    if (player.equals("R")) {
       g2.setColor(Color.RED);
     } else {
       g2.setColor(Color.BLUE);

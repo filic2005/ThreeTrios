@@ -103,6 +103,14 @@ public class Card {
   }
 
   /**
+   *
+   * @return
+   */
+  public String getName() {
+    return this.name;
+  }
+
+  /**
    * Returns a visual representation of this Card's info.
    * @return String Card's toString.
    */
