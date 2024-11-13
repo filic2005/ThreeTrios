@@ -62,51 +62,62 @@ public class CornersFirst implements ThreeTriosStrategy {
   }
 
   private boolean isCornerPiece(ArrayList<ArrayList<Cell>> grid, int row, int col) {
-    if (grid.get(row).get(col) instanceof CardCell) {
-
-      if (row + 1 > grid.size() || (row + 1 < grid.size() && grid.get(row + 1).get(col) instanceof Hole)) {
-        if ((col - 1 < 0 || grid.get(row).get(col - 1) instanceof Hole) ||
-                (col + 1 > grid.get(row).size()
-                        || (col + 1 < grid.get(row).size() && grid.get(row).get(col + 1) instanceof Hole))) {
-          return true;
-        }
-      }
-
-      if (row - 1 < 0 || grid.get(row - 1).get(col) instanceof Hole) {
-        if ((col - 1 < 0 || grid.get(row).get(col - 1) instanceof Hole) ||
-                (col + 1 > grid.get(row).size()
-                        || (col + 1 < grid.get(row).size() && grid.get(row).get(col + 1) instanceof Hole))) {
-          return true;
-        }
-      }
+    if (!(grid.get(row).get(col) instanceof CardCell)) {
+      return false;
     }
+
+    int numRows = grid.size();
+    int numCols = grid.get(row).size();
+
+    // Check pairs of "blocked" cells (either out of bounds or a Hole)
+    if ((isBlocked(row - 1, col, grid, numRows, numCols) && isBlocked(row, col - 1, grid, numRows, numCols)) ||  // Top-left corner (blocked from above and left)
+            (isBlocked(row - 1, col, grid, numRows, numCols) && isBlocked(row, col + 1, grid, numRows, numCols)) ||  // Top-right corner (blocked from above and right)
+            (isBlocked(row + 1, col, grid, numRows, numCols) && isBlocked(row, col - 1, grid, numRows, numCols)) ||  // Bottom-left corner (blocked from below and left)
+            (isBlocked(row + 1, col, grid, numRows, numCols) && isBlocked(row, col + 1, grid, numRows, numCols)) ||  // Bottom-right corner (blocked from below and right)
+            (isBlocked(row - 1, col, grid, numRows, numCols) && isBlocked(row + 1, col, grid, numRows, numCols)) ||  // Blocked directly above and below
+            (isBlocked(row, col - 1, grid, numRows, numCols) && isBlocked(row, col + 1, grid, numRows, numCols))) {  // Blocked directly left and right
+      return true;
+    }
+
     return false;
+  }
+
+  private boolean isBlocked(int r, int c, ArrayList<ArrayList<Cell>> grid, int numRows, int numCols) {
+    return r < 0 || r >= numRows || c < 0 || c >= numCols || grid.get(r).get(c) instanceof Hole;
   }
 
   private double getFlipVal(Card card, ArrayList<ArrayList<Cell>> grid, int row, int col) {
     int totalVal = 0;
 
-    if (grid.get(row).get(col) instanceof CardCell) {
-      if (row + 1 > grid.size() || (row + 1 < grid.size() && grid.get(row + 1).get(col) instanceof Hole)) {
-        if (col - 1 < 0 || grid.get(row).get(col - 1) instanceof Hole) {
-          totalVal = card.getEast() + card.getNorth();
-        } else if (col + 1 > grid.get(row).size()
-                || (col + 1 < grid.get(row).size() && grid.get(row).get(col + 1) instanceof Hole)) {
-          totalVal = card.getWest() + card.getNorth();
-        }
-      }
+    int numRows = grid.size();
+    int numCols = grid.get(row).size();
 
-      if (row - 1 < 0 || grid.get(row - 1).get(col) instanceof Hole) {
-        if (col - 1 < 0 || grid.get(row).get(col - 1) instanceof Hole) {
-          totalVal = card.getSouth() + card.getEast();
-        } else if (col + 1 > grid.get(row).size()
-                || (col + 1 < grid.get(row).size() && grid.get(row).get(col + 1) instanceof Hole)) {
-          totalVal = card.getWest() + card.getSouth();
-        }
+    if (grid.get(row).get(col) instanceof CardCell) {
+      if (isBlocked(row - 1, col, grid, numRows, numCols)
+              && isBlocked(row, col - 1, grid, numRows, numCols)) {
+        totalVal += card.getSouth() + card.getEast();
+      }
+      else if (isBlocked(row - 1, col, grid, numRows, numCols)
+              && isBlocked(row, col + 1, grid, numRows, numCols)) {
+        totalVal += card.getSouth() + card.getWest();
+      }
+      else if (isBlocked(row + 1, col, grid, numRows, numCols)
+              && isBlocked(row, col - 1, grid, numRows, numCols)) {
+        totalVal += card.getNorth() + card.getEast();
+      }
+      else if (isBlocked(row + 1, col, grid, numRows, numCols)
+              && isBlocked(row, col + 1, grid, numRows, numCols)) {
+        totalVal += card.getNorth() + card.getWest();
+      }
+      else if (isBlocked(row - 1, col, grid, numRows, numCols)
+              && isBlocked(row + 1, col, grid, numRows, numCols)) {
+        totalVal += card.getWest() + card.getEast();
+      }
+      else if (isBlocked(row, col - 1, grid, numRows, numCols)
+              && isBlocked(row, col + 1, grid, numRows, numCols)) {
+        totalVal += card.getNorth() + card.getSouth();
       }
     }
-
-
     return (double) totalVal / 2;
   }
 }

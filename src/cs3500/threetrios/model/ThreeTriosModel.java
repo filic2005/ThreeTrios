@@ -1,7 +1,7 @@
 package cs3500.threetrios.model;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Random;
 
@@ -27,11 +27,11 @@ public class ThreeTriosModel implements IThreeTriosModel {
    * representing the baord and cards to be used.
    * This also instantiates the game board and player's hands (randomly
    * dispersing the card based on a predetermined Random object).
-   * @param gridFile text file to store configuration of the board.
-   * @param cardDB text file to store card information used in the game.
+   * @param grid text file to store configuration of the board.
+   * @param cards text file to store card information used in the game.
    */
-  public ThreeTriosModel(String gridFile, String cardDB) {
-    this(new Random(), gridFile, cardDB);
+  public ThreeTriosModel(ArrayList<ArrayList<Cell>> grid, ArrayList<Card> cards) {
+    this(new Random(), grid, cards);
   }
 
   /**
@@ -39,30 +39,27 @@ public class ThreeTriosModel implements IThreeTriosModel {
    * and files representing the board and cards to be used.
    * This also instantiates the game board and players' hands.
    * @param r Random object to shuffle cards.
-   * @param gridFile text file to store configuration of the board.
-   * @param cardDB text file to store card information used in the game.
+   * @param grid text file to store configuration of the board.
+   * @param cards text file to store card information used in the game.
    * @throws IllegalArgumentException if config files produce invalid game info.
    * @throws IllegalArgumentException if the passed path names are invalid.
    */
-  public ThreeTriosModel(Random r, String gridFile, String cardDB) {
+  public ThreeTriosModel(Random r, ArrayList<ArrayList<Cell>> grid, ArrayList<Card> cards) {
     cardList = new ArrayList<>();
     this.bluePlayer = new Player();
     this.redPlayer = new Player();
     this.turn = true;
 
-    try {
-      this.grid = new Reader().createGrid(gridFile);
-      this.rows = grid.size();
-      this.cols = grid.get(0).size();
-      this.cardList = new Reader().createHands(cardDB, r);
-      this.gridCount = numCardCellOnBoard();
-      if (cardList.size() < gridCount + 1) {
-        throw new IllegalArgumentException("Invalid config files");
-      }
-      this.dealToPlayers();
-    } catch (FileNotFoundException e) {
-      throw new IllegalArgumentException("Invalid path name");
+    this.grid = grid;
+    this.rows = grid.size();
+    this.cols = grid.get(0).size();
+    this.cardList = cards;
+    Collections.shuffle(cards, r);
+    this.gridCount = numCardCellOnBoard();
+    if (cardList.size() < gridCount + 1) {
+      throw new IllegalArgumentException("Invalid config files");
     }
+    this.dealToPlayers();
   }
 
   /**

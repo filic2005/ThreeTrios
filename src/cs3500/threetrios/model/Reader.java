@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -37,6 +35,7 @@ public class Reader {
     File gridConfig = new File(gridFile);
     FileReader reader = new FileReader(gridConfig);
     Scanner in = new Scanner(reader);
+    int cardCellCount = 0;
 
     if (!in.hasNextInt()) {
       throw new IllegalArgumentException("Expected integer for rows");
@@ -75,6 +74,7 @@ public class Reader {
         char input = line.charAt(col);
         if (input == 'C') {
           grid.get(row).add(col, new CardCell(null, row, col));
+          cardCellCount++;
         } else if (input == 'X') {
           grid.get(row).add(col, new Hole(row, col));
         } else {
@@ -84,6 +84,10 @@ public class Reader {
       }
     }
 
+    if (cardCellCount % 2 == 0) {
+      throw new IllegalArgumentException("Card cell count must be odd.");
+    }
+
     return grid;
   }
 
@@ -91,11 +95,10 @@ public class Reader {
    * Takes in a text config file with Card information and parses it into a usable list
    * format, representing all possible cards in the game.
    * @param cardDB text file path.
-   * @param random Random object used to shuffle the cards.
    * @return an ArrayList of the Cards used in the game.
    * @throws FileNotFoundException when the path given is invalid.
    */
-  public ArrayList<Card> createHands(String cardDB, Random random) throws FileNotFoundException {
+  public ArrayList<Card> createHands(String cardDB) throws FileNotFoundException {
     ArrayList<Card> cardList = new ArrayList<>();
 
     File cards = new File(cardDB);
@@ -119,7 +122,6 @@ public class Reader {
       cardList.add(new Card(cardInfo[0], cardInfo[1], cardInfo[2], cardInfo[3], cardInfo[4]));
     }
 
-    Collections.shuffle(cardList, random);
     return cardList;
   }
 }
