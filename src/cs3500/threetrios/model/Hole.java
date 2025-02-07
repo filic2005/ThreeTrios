@@ -7,8 +7,8 @@ package cs3500.threetrios.model;
 public class Hole implements Cell {
 
 
-  int row;
-  int col;
+  private final int row;
+  private final int col;
 
   /**
    * Constructs a Hole with a passed location.

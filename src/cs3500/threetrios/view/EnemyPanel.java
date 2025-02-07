@@ -6,25 +6,22 @@ import cs3500.threetrios.model.ICard;
 import cs3500.threetrios.model.IReadOnlyThreeTriosModel;
 
 import javax.swing.JPanel;
-import javax.swing.event.MouseInputAdapter;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Graphics;
 import java.awt.BasicStroke;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * JPanel that represents a players hand in a GUI view.
+ * This class represents a panel that does not register mouse input/clicks.
  */
-public class HandPanel extends JPanel implements IHandPanel {
+public class EnemyPanel extends JPanel implements IHandPanel {
 
   private final IReadOnlyThreeTriosModel model;
   private final Player player;
-  private int highlightedIdx = -1;
-  private final List<Features> features;
+  private List<Features> features;
 
   /**
    * Constructor for a HandPanel,
@@ -32,12 +29,11 @@ public class HandPanel extends JPanel implements IHandPanel {
    *
    * @param model the model it is representing.
    */
-  public HandPanel(IReadOnlyThreeTriosModel model, Player player) {
+  public EnemyPanel(IReadOnlyThreeTriosModel model, Player player) {
     this.model = model;
     this.player = player;
-    this.features = new ArrayList<Features>();
-    this.setPreferredSize(new Dimension(120, 600)); // Example size
-    this.addMouseListener(new MouseEventsListener());
+    this.features = new ArrayList<>();
+    this.setPreferredSize(new Dimension(120, 600));
   }
 
   @Override
@@ -57,16 +53,9 @@ public class HandPanel extends JPanel implements IHandPanel {
 
       drawCard(g2, card, x, y);
 
-      // Highlight the cell if it's selected
-      if (card == highlightedIdx) {
-        g2.setColor(Color.GREEN);
-        g2.setStroke(new BasicStroke(4));
-        g2.drawRect(x, y, cardWidth, cardHeight);
-      } else {
-        g2.setColor(Color.BLACK);
-        g2.setStroke(new BasicStroke(1));
-        g2.drawRect(x, y, cardWidth, cardHeight);
-      }
+      g2.setColor(Color.BLACK);
+      g2.setStroke(new BasicStroke(1));
+      g2.drawRect(x, y, cardWidth, cardHeight);
     }
   }
 
@@ -116,36 +105,10 @@ public class HandPanel extends JPanel implements IHandPanel {
     g2.drawString(east, eastX, eastY);
   }
 
-  /**
-   * Sets a card to highlighted and repaints when it is called upon.
-   * Called when a Card is clicked on.
-   *
-   * @param index the card index that is highlighted.
-   */
-  public void highlightCard(int index) {
-    this.highlightedIdx = index;
-    repaint();
-  }
 
   @Override
   public void addFeatureListener(Features feature) {
     this.features.add(feature);
   }
 
-  private class MouseEventsListener extends MouseInputAdapter {
-    @Override
-    public void mousePressed(MouseEvent e) {
-      int cellHeight = getHeight() / model.getPlayerHand(player.getColor().toString()).size();
-      int row = e.getY() / cellHeight;
-
-      if (row < model.getPlayerHand(player.getColor().toString()).size()) {
-        if (model.getPlayerHand(player.getColor().toString()).get(row) != null) {
-          highlightCard(row);
-          features.get(0).selectCard(row);
-          System.out.println("Clicked card num in hand: " + row);
-          repaint();
-        }
-      }
-    }
-  }
 }

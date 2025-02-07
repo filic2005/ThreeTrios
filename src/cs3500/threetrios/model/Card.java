@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Represents a Card in the ThreeTrios game.
  */
-public class Card {
+public class Card implements ICard {
 
   private final String north;
   private final String east;
@@ -43,9 +43,7 @@ public class Card {
   }
 
 
-  /**
-   * Retrieves this Card's numerical North value.
-   */
+  @Override
   public int getNorth() {
     if (Objects.equals(this.north, "A")) {
       return 10;
@@ -53,9 +51,7 @@ public class Card {
     return Integer.parseInt(this.north);
   }
 
-  /**
-   * Retrieves this Card's numerical West value.
-   */
+  @Override
   public int getWest() {
     if (Objects.equals(this.west, "A")) {
       return 10;
@@ -63,9 +59,7 @@ public class Card {
     return Integer.parseInt(this.west);
   }
 
-  /**
-   * Retrieves this Card's numerical South value.
-   */
+  @Override
   public int getSouth() {
     if (Objects.equals(this.south, "A")) {
       return 10;
@@ -73,9 +67,7 @@ public class Card {
     return Integer.parseInt(this.south);
   }
 
-  /**
-   * Retrieves this Card's numerical East value.
-   */
+  @Override
   public int getEast() {
     if (Objects.equals(this.east, "A")) {
       return 10;
@@ -83,18 +75,12 @@ public class Card {
     return Integer.parseInt(this.east);
   }
 
-  /**
-   * Allows the caller to set the owner of this card.
-   * @param owner true is RED, false is BLUE.
-   */
+  @Override
   public void setOwner(boolean owner) {
     this.owner = owner;
   }
 
-  /**
-   * Returns the owner of this card in one character.
-   * @return String, R for RED, B for BLUE. Used to help print out game state in view.
-   */
+  @Override
   public String getOwner() {
     if (this.owner) {
       return "R";
@@ -102,18 +88,12 @@ public class Card {
     return "B";
   }
 
-  /**
-   *
-   * @return
-   */
+  @Override
   public String getName() {
     return this.name;
   }
 
-  /**
-   * Returns a visual representation of this Card's info.
-   * @return String Card's toString.
-   */
+  @Override
   public String toString() {
     return name + " " + north + " " + south
             + " " + east + " " + west;

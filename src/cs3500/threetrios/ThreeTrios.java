@@ -1,38 +1,123 @@
 package cs3500.threetrios;
 
-import cs3500.threetrios.model.*;
-import cs3500.threetrios.view.ThreeTriosViewGUI;
+//import cs3500.threetrios.provider.view.TTGraphicsView;
+//import cs3500.threetrios.adapters.ProviderModelAdapter;
+//import cs3500.threetrios.adapters.ProviderViewAdapter;
+import cs3500.threetrios.controller.Player;
+import cs3500.threetrios.controller.MachinePlayer;
+import cs3500.threetrios.controller.HumanPlayer;
+import cs3500.threetrios.controller.PlayerColor;
+import cs3500.threetrios.controller.ThreeTriosController;
+import cs3500.threetrios.controller.Features;
+import cs3500.threetrios.model.ThreeTriosModel;
+import cs3500.threetrios.model.Cell;
+import cs3500.threetrios.model.Reader;
+import cs3500.threetrios.model.IBattleRule;
+import cs3500.threetrios.model.DefaultBattleRule;
+import cs3500.threetrios.model.ReverseBattleRule;
+import cs3500.threetrios.model.FallenAceRule;
+import cs3500.threetrios.model.ICard;
+import cs3500.threetrios.model.FlipMaxCards;
+import cs3500.threetrios.model.CornersFirst;
+import cs3500.threetrios.view.PlayerView;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * The main class to run a game of ThreeTrios.
+ * Sets up the View and Model, and runs the game and any commands to play the game.
+ */
 public class ThreeTrios {
+  /**
+   * Sets up the View and Model, and runs the game and any commands to play the game.
+   * In order to quick start from the command line in the JAR file,
+   * pick two of the following in the command line:
+   * - human
+   * - strategy1
+   * - strategy2
+   * example:
+   * java -jar out/artifacts/ThreeTrios_jar/ThreeTrios.jar human strategy1
+   *
+   * @param args command line arguments.
+   */
   public static void main(String[] args) {
-    Random rand = new Random(1);
+
+    if (args.length < 2) {
+      throw new IllegalArgumentException("Need two arguments");
+    }
+
     try {
-      ArrayList<ArrayList<Cell>> grid = new Reader().createGrid("NoHolesBoard");
-      ArrayList<Card> cards = new Reader().createHands("17Cards");
-      ThreeTriosModel model = new ThreeTriosModel(rand, grid, cards);
-      ThreeTriosViewGUI view = new ThreeTriosViewGUI(model);
-      ThreeTriosStrategy strategyRed = new CornersFirst();
-      ThreeTriosStrategy strategyBlue = new CornersFirst();
+      ArrayList<ArrayList<Cell>> grid = new Reader()
+              .createGrid("src/cs3500/threetrios/model/NoHolesBoard");
+      ArrayList<ICard> cards = new Reader().createHands("src/cs3500/threetrios/model/10Cards");
 
-      for (int i = 0; i < 2; i++) {
-        model.placeCard(strategyRed.chooseMove(model, "R").getRow(),
-                strategyRed.chooseMove(model, "R").getCol(),
-                strategyRed.chooseMove(model, "R").getHandIdx());
-        model.placeCard(strategyBlue.chooseMove(model, "B").getRow(),
-                strategyBlue.chooseMove(model, "B").getCol(),
-                strategyBlue.chooseMove(model, "B").getHandIdx());
+      IBattleRule rule = new DefaultBattleRule();
+
+      if (args.length > 2) {
+        for (int i = args.length - 1; i >= 2; i--) {
+          switch (args[i]) {
+            case "reverse":
+              rule = new ReverseBattleRule(rule);
+              break;
+            case "fallen-ace":
+              rule = new FallenAceRule(rule);
+              break;
+            default:
+              throw new IllegalArgumentException("Unknown strategy " + args[1]);
+          }
+        }
       }
-//      model.placeCard(strategyRed.chooseMove(model, "R").getRow(),
-//              strategyRed.chooseMove(model, "R").getCol(),
-//              strategyRed.chooseMove(model, "R").getHandIdx());
 
-      view.setVisible(true);
-    } catch(IOException ignored) {
+      //rand for reproducibility, can remove if needed.
+      Random rand = new Random(1);
+      ThreeTriosModel model = new ThreeTriosModel(rand, grid, cards, rule);
 
+      Player player1 = null;
+      Player player2 = null;
+
+      switch (args[0]) {
+        case "human":
+          player1 = new HumanPlayer(PlayerColor.R);
+          break;
+        case "strategy1":
+          player1 = new MachinePlayer(model, PlayerColor.R, new FlipMaxCards());
+          break;
+        case "strategy2":
+          player1 = new MachinePlayer(model, PlayerColor.R, new CornersFirst());
+          break;
+        default:
+          throw new IllegalArgumentException("Unknown strategy " + args[0]);
+      }
+
+      switch (args[1]) {
+        case "human":
+          player2 = new HumanPlayer(PlayerColor.B);
+          break;
+        case "strategy1":
+          player2 = new MachinePlayer(model, PlayerColor.B, new FlipMaxCards());
+          break;
+        case "strategy2":
+          player2 = new MachinePlayer(model, PlayerColor.B, new CornersFirst());
+          break;
+        default:
+          throw new IllegalArgumentException("Unknown strategy " + args[1]);
+      }
+
+
+      PlayerView viewPlayer1 = new PlayerView(model, player1, player2);
+      //ProviderModelAdapter adaptedModel = new ProviderModelAdapter(model);
+      //TTGraphicsView adaptedView = new TTGraphicsView(adaptedModel);
+      //ProviderViewAdapter viewPlayer2 = new ProviderViewAdapter(adaptedView);
+      PlayerView viewPlayer2 = new PlayerView(model, player2, player1);
+
+      Features controller1 = new ThreeTriosController(model, player1, viewPlayer1);
+      Features controller2 = new ThreeTriosController(model, player2, viewPlayer2);
+
+      model.startGame();
+    } catch (IOException ignored) {
+      throw new IllegalArgumentException("Could not read files");
     }
   }
 }

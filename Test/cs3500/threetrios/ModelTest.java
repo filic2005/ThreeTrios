@@ -1,6 +1,15 @@
 package cs3500.threetrios;
 
-import cs3500.threetrios.model.*;
+import cs3500.threetrios.model.ThreeTriosModel;
+import cs3500.threetrios.model.Reader;
+import cs3500.threetrios.model.DefaultBattleRule;
+import cs3500.threetrios.model.Cell;
+import cs3500.threetrios.model.ICard;
+import cs3500.threetrios.model.CardCell;
+import cs3500.threetrios.model.ThreeTriosStrategy;
+import cs3500.threetrios.model.RobotMove;
+import cs3500.threetrios.model.FlipMaxCards;
+import cs3500.threetrios.model.CornersFirst;
 import cs3500.threetrios.view.ThreeTriosView;
 
 import org.junit.Before;
@@ -9,6 +18,7 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -24,14 +34,14 @@ public class ModelTest {
 
   @Before
   public void init() {
-    ArrayList<ArrayList<Cell>> NoHolesBoard = null;
-    ArrayList<Card> cards = null;
+    ArrayList<ArrayList<Cell>> noHolesBoard = null;
+    ArrayList<ICard> cards = null;
     try {
-      NoHolesBoard = new Reader().createGrid("NoHolesBoard");
-      cards = new Reader().createHands("17Cards");
+      noHolesBoard = new Reader().createGrid("src/cs3500/threetrios/model/NoHolesBoard");
+      cards = new Reader().createHands("src/cs3500/threetrios/model/17Cards");
     } catch (IOException ignored) {
     }
-    model = new ThreeTriosModel(new Random(1), NoHolesBoard, cards);
+    model = new ThreeTriosModel(new Random(1), noHolesBoard, cards, new DefaultBattleRule());
   }
 
   @Test
@@ -45,14 +55,17 @@ public class ModelTest {
   public void testConstructorInvalidGridFile() throws FileNotFoundException {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random,
-            new Reader().createGrid("BadFormatBoard"), new Reader().createHands("17Cards"));
+            new Reader().createGrid("src/cs3500/threetrios/model/BadFormatBoard"), new Reader()
+            .createHands("src/cs3500/threetrios/model/17Cards"), new DefaultBattleRule());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testConstructorInvalidCardDBFile() throws FileNotFoundException {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random,
-            new Reader().createGrid("NoHolesBoard"), new Reader().createHands("BadFormatCards"));
+            new Reader().createGrid("src/cs3500/threetrios/model/NoHolesBoard"),
+            new Reader().createHands("src/cs3500/threetrios/model/BadFormatCards"),
+            new DefaultBattleRule());
   }
 
   @Test
@@ -90,8 +103,10 @@ public class ModelTest {
   @Test(expected = IllegalStateException.class)
   public void testPlaceCardInvalidCellType() throws FileNotFoundException {
     Random random = new Random(1);
-    ThreeTriosModel model = new ThreeTriosModel(random, new Reader().createGrid("ConnectedHolesBoard"),
-            new Reader().createHands("22Cards"));
+    ThreeTriosModel model = new ThreeTriosModel(random,
+            new Reader().createGrid("src/cs3500/threetrios/model/ConnectedHolesBoard"),
+            new Reader().createHands("src/cs3500/threetrios/model/22Cards"),
+            new DefaultBattleRule());
     model.placeCard(0, 5, 0);
   }
 
@@ -99,13 +114,14 @@ public class ModelTest {
   public void testBattleMechanic() {
     Random random = new Random(1);
     ArrayList<ArrayList<Cell>> noHolesBoard = null;
-    ArrayList<Card> cards22 = null;
+    ArrayList<ICard> cards22 = null;
     try {
-      noHolesBoard = new Reader().createGrid("NoHolesBoard");
-      cards22 = new Reader().createHands("22Cards");
+      noHolesBoard = new Reader().createGrid("src/cs3500/threetrios/model/NoHolesBoard");
+      cards22 = new Reader().createHands("src/cs3500/threetrios/model/22Cards");
     } catch (IOException ignored) {
     }
-    ThreeTriosModel model2 = new ThreeTriosModel(random, noHolesBoard, cards22);
+    ThreeTriosModel model2 = new ThreeTriosModel(random, noHolesBoard, cards22,
+            new DefaultBattleRule());
     model2.placeCard(0, 0, 0);
     assertEquals("R", ((CardCell)model2.getGrid().get(0).get(0)).getCard().getOwner());
     assertEquals("B", model2.getTurn());
@@ -122,7 +138,7 @@ public class ModelTest {
   public void testInvalidPathNameInConstructor() throws FileNotFoundException {
     Random random = new Random(1);
     ThreeTriosModel model = new ThreeTriosModel(random, new Reader().createGrid("invalid_path"),
-            new Reader().createHands("invalid_path"));
+            new Reader().createHands("invalid_path"), new DefaultBattleRule());
   }
 
   @Test
@@ -210,9 +226,10 @@ public class ModelTest {
   public void testGameTieAndOver() throws FileNotFoundException {
     Random random = new Random(1);
 
-    ThreeTriosModel model = new ThreeTriosModel(random, new Reader().createGrid("1x1TestBoard"),
-            new Reader().createHands("17Cards"));
-    Appendable ap = new StringBuilder();
+    ThreeTriosModel model = new ThreeTriosModel(random, new Reader()
+            .createGrid("src/cs3500/threetrios/model/1x1TestBoard"),
+            new Reader().createHands("src/cs3500/threetrios/model/17Cards"),
+            new DefaultBattleRule());
 
     System.out.println(model.getPlayerHand("R"));
     System.out.println(model.getPlayerHand("B"));
@@ -240,25 +257,111 @@ public class ModelTest {
   @Test(expected = IllegalArgumentException.class)
   public void testEvenBoard() throws FileNotFoundException {
     Random random = new Random(1);
-    ThreeTriosModel model = new ThreeTriosModel(random, new Reader().createGrid("2x2Board"),
-            new Reader().createHands("17Cards"));
+    ThreeTriosModel model = new ThreeTriosModel(random, new Reader()
+            .createGrid("src/cs3500/threetrios/model/2x2Board"),
+            new Reader().createHands("src/cs3500/threetrios/model/17Cards"),
+            new DefaultBattleRule());
   }
 
 
   @Test(expected = IllegalArgumentException.class)
   public void testBadFormatBoard() throws FileNotFoundException {
     Random random = new Random(1);
-    ThreeTriosModel model = new ThreeTriosModel(random, new Reader().createGrid("BadFormatBoard"),
-            new Reader().createHands("17Cards"));
+    ThreeTriosModel model = new ThreeTriosModel(random, new Reader()
+            .createGrid("src/cs3500/threetrios/model/BadFormatBoard"),
+            new Reader().createHands("src/cs3500/threetrios/model/17Cards"),
+            new DefaultBattleRule());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testBadFormatCards() throws FileNotFoundException {
     Random random = new Random(1);
-    ThreeTriosModel model = new ThreeTriosModel(random, new Reader().createGrid("2x2Board"),
-            new Reader().createHands("BadFormatCards"));
+    ThreeTriosModel model = new ThreeTriosModel(random, new Reader()
+            .createGrid("src/cs3500/threetrios/model/2x2Board"),
+            new Reader().createHands("src/cs3500/threetrios/model/BadFormatCards"),
+            new DefaultBattleRule());
   }
 
+  @Test
+  public void testChecksAllFourCorners() throws FileNotFoundException {
+    MockModelAllPositions mockModel = new MockModelAllPositions(new Random(1),
+            new Reader().createGrid("src/cs3500/threetrios/model/NoHolesBoard"),
+            new Reader().createHands("src/cs3500/threetrios/model/17Cards"));
 
+    ThreeTriosStrategy strategy2 = new CornersFirst();
+    RobotMove move = strategy2.chooseMove(mockModel, "R");
 
+    List<String> expectedCorners = List.of("[0, 0]","[0, 2]","[2, 0]","[2, 2]");
+
+    System.out.println(mockModel.getCheckedCoordinates());
+    for (String corner : expectedCorners) {
+      assertEquals(true, mockModel.getCheckedCoordinates().contains(corner));
+    }
+  }
+
+  @Test
+  public void testChecksAllCells() throws FileNotFoundException {
+    MockModelAllPositions mockModel = new MockModelAllPositions(new Random(1),
+            new Reader().createGrid("src/cs3500/threetrios/model/NoHolesBoard"),
+            new Reader().createHands("src/cs3500/threetrios/model/17Cards"));
+    ThreeTriosStrategy strategy1 = new FlipMaxCards();
+    strategy1.chooseMove(mockModel, "R");
+
+    List<String> allCoordinates = new ArrayList<>();
+    for (int i = 0; i < mockModel.getRows(); i++) {
+      for (int j = 0; j < mockModel.getCols(); j++) {
+        allCoordinates.add(new String("[" + i + ", " + j + "]"));
+      }
+    }
+
+    System.out.println(mockModel.getCheckedCoordinates());
+    for (String coord : allCoordinates) {
+      assertEquals(true,mockModel.getCheckedCoordinates().contains(coord));
+    }
+  }
+
+  @Test
+  public void testChoosesMostValuableLocation() throws FileNotFoundException {
+    MockModelSetsPerfectPos mockModel = new MockModelSetsPerfectPos(new Random(1),
+            new Reader().createGrid("src/cs3500/threetrios/model/NoHolesBoard"),
+            new Reader().createHands("src/cs3500/threetrios/model/17Cards"));
+
+    ICard targetCard = mockModel.getPlayerHand("R").get(0);
+    mockModel.setFlipCount(2, 2, targetCard, 3);
+    mockModel.setFlipCount(1, 1, targetCard, 1);
+    mockModel.setFlipCount(0, 0, targetCard, 2);
+
+    FlipMaxCards strategy = new FlipMaxCards();
+    RobotMove chosenMove = strategy.chooseMove(mockModel, "R");
+
+    assertEquals(2, chosenMove.getRow());
+    assertEquals(2, chosenMove.getCol());
+    assertEquals(0, chosenMove.getHandIdx());
+  }
+
+  @Test
+  public void testFlipMaxCardsStrategy() throws FileNotFoundException {
+    Random random = new Random(1);
+    ThreeTriosModel model = new ThreeTriosModel(random,
+            new Reader().createGrid("src/cs3500/threetrios/model/NoHolesBoard"),
+            new Reader().createHands("src/cs3500/threetrios/model/17Cards"),
+            new DefaultBattleRule());
+    ThreeTriosStrategy strategyRed = new FlipMaxCards();
+
+    assertEquals(0, strategyRed.chooseMove(model, "R").getRow());
+    assertEquals(0, strategyRed.chooseMove(model, "R").getCol());
+    assertEquals(0, strategyRed.chooseMove(model, "R").getHandIdx());
+
+    model.placeCard(strategyRed.chooseMove(model, "R").getRow(),
+            strategyRed.chooseMove(model, "R").getCol(),
+            strategyRed.chooseMove(model, "R").getHandIdx());
+
+    assertEquals(1, strategyRed.chooseMove(model, "B").getRow());
+    assertEquals(0, strategyRed.chooseMove(model, "B").getCol());
+    assertEquals(1, strategyRed.chooseMove(model, "B").getHandIdx());
+
+    model.placeCard(strategyRed.chooseMove(model, "B").getRow(),
+            strategyRed.chooseMove(model, "B").getCol(),
+            strategyRed.chooseMove(model, "B").getHandIdx());
+  }
 }

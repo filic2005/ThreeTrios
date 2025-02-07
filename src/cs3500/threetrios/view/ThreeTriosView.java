@@ -3,18 +3,18 @@ package cs3500.threetrios.view;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import cs3500.threetrios.model.Card;
-import cs3500.threetrios.model.CardCell;
 import cs3500.threetrios.model.Cell;
+import cs3500.threetrios.model.ICardCell;
+import cs3500.threetrios.model.IReadOnlyThreeTriosModel;
 import cs3500.threetrios.model.Hole;
-import cs3500.threetrios.model.IThreeTriosModel;
+import cs3500.threetrios.model.ICard;
 
 /**
  * Represents a rudimentary text view of a game of ThreeTrios.
  */
 public class ThreeTriosView {
 
-  private final IThreeTriosModel model;
+  private final IReadOnlyThreeTriosModel model;
   private final Appendable appendable;
 
   /**
@@ -22,7 +22,7 @@ public class ThreeTriosView {
    * @param model game model.
    * @param ap appendable to add renderings to.
    */
-  public ThreeTriosView(IThreeTriosModel model, Appendable ap) {
+  public ThreeTriosView(IReadOnlyThreeTriosModel model, Appendable ap) {
     this.appendable = ap;
     this.model = model;
   }
@@ -50,9 +50,9 @@ public class ThreeTriosView {
 
         if (grid.get(row).get(col) instanceof CardCell) {
 
-          if (((CardCell) grid.get(row).get(col)).getCard() != null) {
-            gameState.append(((CardCell) grid.get(row).get(col)).getCard().getOwner());
-          } else if (((CardCell) grid.get(row).get(col)).getCard() == null) {
+          if (((ICardCell) grid.get(row).get(col)).getCard() != null) {
+            gameState.append(((ICardCell) grid.get(row).get(col)).getCard().getOwner());
+          } else if (((ICardCell) grid.get(row).get(col)).getCard() == null) {
             gameState.append("_");
           }
         }
@@ -66,7 +66,7 @@ public class ThreeTriosView {
 
     gameState.append("Hand:\n");
 
-    for (Card card : model.getPlayerHand(model.getTurn())) {
+    for (ICard card : model.getPlayerHand(model.getTurn())) {
       gameState.append(card.toString() + "\n");
     }
 

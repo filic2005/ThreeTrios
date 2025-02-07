@@ -1,37 +1,48 @@
 package cs3500.threetrios.view;
 
-import cs3500.threetrios.model.Card;
-import cs3500.threetrios.model.CardCell;
+import cs3500.threetrios.controller.Features;
 import cs3500.threetrios.model.Cell;
+import cs3500.threetrios.model.ICard;
 import cs3500.threetrios.model.IReadOnlyThreeTriosModel;
+import cs3500.threetrios.model.ICardCell;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputAdapter;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.BasicStroke;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- *
+ * JPanel that represents the game board in a GUI view.
  */
 public class BoardPanel extends JPanel implements IBoardPanel {
 
-  private final IReadOnlyThreeTriosModel model;
-  private final int rows;
-  private final int cols;
+  protected final int rows;
+  protected final int cols;
   private int highlightedRow = -1;
   private int highlightedCol = -1;
   private final ArrayList<ArrayList<Cell>> modelGrid;
+  protected List<Features> features;
 
   /**
-   * @param model
+   * Constructor for a BoardPanel, sets all the info from the model needed.
+   *
+   * @param model the model it is representing.
    */
   public BoardPanel(IReadOnlyThreeTriosModel model) {
-    this.model = model;
     this.rows = model.getRows();
     this.cols = model.getCols();
     this.modelGrid = model.getGrid();
     this.addMouseListener(new MouseEventsListener());
+  }
+
+  public void refresh() {
+    this.repaint();
   }
 
   @Override
@@ -48,8 +59,8 @@ public class BoardPanel extends JPanel implements IBoardPanel {
         int y = row * cellHeight;
 
 
-        if (modelGrid.get(row).get(col) instanceof CardCell) {
-          if (((CardCell) modelGrid.get(row).get(col)).getCard() == null) {
+        if (modelGrid.get(row).get(col) instanceof ICardCell) {
+          if (((ICardCell) modelGrid.get(row).get(col)).getCard() == null) {
             g2.setColor(Color.YELLOW);
             g2.setStroke(new BasicStroke(4));
             g2.fillRect(x, y, cellWidth, cellHeight);
@@ -80,7 +91,7 @@ public class BoardPanel extends JPanel implements IBoardPanel {
     int cellWidth = getWidth() / cols;
     int cellHeight = getHeight() / rows;
 
-    Card card = ((CardCell) modelGrid.get(row).get(col)).getCard();
+    ICard card = ((ICardCell) modelGrid.get(row).get(col)).getCard();
     if (card.getOwner().equals("R")) {
       g2.setColor(Color.RED);
     } else {
@@ -98,11 +109,28 @@ public class BoardPanel extends JPanel implements IBoardPanel {
     int eastX = x + cellWidth - 25;
     int eastY = y + cellHeight / 2 + 5;
 
+    String north = String.valueOf(card.getNorth());
+    if (north.equals("10")) {
+      north = "A";
+    }
+    String south = String.valueOf(card.getSouth());
+    if (south.equals("10")) {
+      south = "A";
+    }
+    String west = String.valueOf(card.getWest());
+    if (west.equals("10")) {
+      west = "A";
+    }
+    String east = String.valueOf(card.getEast());
+    if (east.equals("10")) {
+      east = "A";
+    }
+
     g2.setColor(Color.BLACK);
-    g2.drawString(String.valueOf(card.getNorth()), northX, northY);
-    g2.drawString(String.valueOf(card.getSouth()), southX, southY);
-    g2.drawString(String.valueOf(card.getWest()), westX, westY);
-    g2.drawString(String.valueOf(card.getEast()), eastX, eastY);
+    g2.drawString(north, northX, northY);
+    g2.drawString(south, southX, southY);
+    g2.drawString(west, westX, westY);
+    g2.drawString(east, eastX, eastY);
   }
 
   @Override
@@ -110,6 +138,26 @@ public class BoardPanel extends JPanel implements IBoardPanel {
     this.highlightedRow = row;
     this.highlightedCol = col;
     repaint();
+  }
+
+  /**
+   * Restarts the sequence if the color was guessed incorrectly.
+   * Also informs the player.
+   */
+  @Override
+  public void error(String errorMessage) {
+    JOptionPane.showMessageDialog(
+            null,
+            errorMessage,
+            "Error",
+            JOptionPane.ERROR_MESSAGE
+    );
+    this.repaint();
+  }
+
+  @Override
+  public void addFeatureListener(Features feature) {
+    this.features.add(feature);
   }
 
   private class MouseEventsListener extends MouseInputAdapter {
@@ -122,11 +170,12 @@ public class BoardPanel extends JPanel implements IBoardPanel {
       int row = e.getY() / cellHeight;
 
       if (row < rows && col < cols) {
-        if (modelGrid.get(row).get(col) instanceof CardCell) {
-          highlightedRow = row;
-          highlightedCol = col;
-          System.out.println("Clicked cell at (" + row + ", " + col + ")");
-          repaint();
+        if (modelGrid.get(row).get(col) instanceof ICardCell) {
+          if (features.get(0).placeCard(row, col)) {
+            highlightCell(row, col);
+            System.out.println("Clicked cell at (" + row + ", " + col + ")");
+            repaint();
+          }
         }
       }
     }

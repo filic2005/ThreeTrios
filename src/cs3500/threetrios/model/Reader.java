@@ -60,14 +60,14 @@ public class Reader {
     // Parse each line of the grid
     for (int row = 0; row < rows; row++) {
       if (!in.hasNextLine()) {
-        throw new IllegalArgumentException("Expected more rows in grid data but reached end of " +
-                "file");
+        throw new IllegalArgumentException("Expected more rows in grid data but reached end of "
+                + "file");
       }
       String line = in.nextLine().trim();
 
       if (line.length() != cols) {
-        throw new IllegalArgumentException("Row " + row + " does not match expected column " +
-                "count of " + cols);
+        throw new IllegalArgumentException("Row " + row + " does not match expected column "
+                + "count of " + cols);
       }
 
       for (int col = 0; col < cols; col++) {
@@ -98,8 +98,8 @@ public class Reader {
    * @return an ArrayList of the Cards used in the game.
    * @throws FileNotFoundException when the path given is invalid.
    */
-  public ArrayList<Card> createHands(String cardDB) throws FileNotFoundException {
-    ArrayList<Card> cardList = new ArrayList<>();
+  public ArrayList<ICard> createHands(String cardDB) throws FileNotFoundException {
+    ArrayList<ICard> cardList = new ArrayList<>();
 
     File cards = new File(cardDB);
     FileReader reader = new FileReader(cards);
@@ -115,8 +115,8 @@ public class Reader {
       String[] cardInfo = text.split(" ");
 
       if (cardInfo.length != 5) {
-        throw new IllegalArgumentException("Invalid card format in line: " + text + ". " +
-                "Expected 5 elements, found " + cardInfo.length);
+        throw new IllegalArgumentException("Invalid card format in line: " + text + ". "
+                + "Expected 5 elements, found " + cardInfo.length);
       }
 
       cardList.add(new Card(cardInfo[0], cardInfo[1], cardInfo[2], cardInfo[3], cardInfo[4]));

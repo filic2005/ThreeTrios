@@ -1,9 +1,12 @@
 package cs3500.threetrios.model;
 
+import cs3500.threetrios.controller.Features;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.List;
 import java.util.Random;
+import java.util.Objects;
+import java.util.Collections;
 
 /**
  * Represents the concrete model of a game of ThreeTrios.
@@ -15,12 +18,14 @@ public class ThreeTriosModel implements IThreeTriosModel {
   private final ArrayList<ArrayList<Cell>> grid;
   private final int rows;
   private final int cols;
-  private ArrayList<Card> cardList;
-  private final Player bluePlayer;
-  private final Player redPlayer;
+  private final ArrayList<ICard> cardList;
+  private final PlayerHand bluePlayer;
+  private final PlayerHand redPlayer;
   private final int gridCount;
   private boolean turn; //true is Red, false is Blue
   //INVARIANT: true is ALWAYS Red, false is ALWAYS Blue and this is maintained by our codebase
+  private final List<Features> features;
+  private final IBattleRule battleRule;
 
   /**
    * Constructs a new game of ThreesTrios given files
@@ -30,8 +35,9 @@ public class ThreeTriosModel implements IThreeTriosModel {
    * @param grid text file to store configuration of the board.
    * @param cards text file to store card information used in the game.
    */
-  public ThreeTriosModel(ArrayList<ArrayList<Cell>> grid, ArrayList<Card> cards) {
-    this(new Random(), grid, cards);
+  public ThreeTriosModel(ArrayList<ArrayList<Cell>> grid,
+                         ArrayList<ICard> cards, IBattleRule battleRule) {
+    this(new Random(), grid, cards, battleRule);
   }
 
   /**
@@ -44,22 +50,33 @@ public class ThreeTriosModel implements IThreeTriosModel {
    * @throws IllegalArgumentException if config files produce invalid game info.
    * @throws IllegalArgumentException if the passed path names are invalid.
    */
-  public ThreeTriosModel(Random r, ArrayList<ArrayList<Cell>> grid, ArrayList<Card> cards) {
-    cardList = new ArrayList<>();
-    this.bluePlayer = new Player();
-    this.redPlayer = new Player();
+  public ThreeTriosModel(Random r, ArrayList<ArrayList<Cell>> grid,
+                         ArrayList<ICard> cards, IBattleRule battleRule) {
+    this.bluePlayer = new PlayerHand();
+    this.redPlayer = new PlayerHand();
     this.turn = true;
-
+    this.features = new ArrayList<>();
     this.grid = grid;
     this.rows = grid.size();
     this.cols = grid.get(0).size();
     this.cardList = cards;
     Collections.shuffle(cards, r);
     this.gridCount = numCardCellOnBoard();
+    this.battleRule = battleRule;
     if (cardList.size() < gridCount + 1) {
       throw new IllegalArgumentException("Invalid config files");
     }
     this.dealToPlayers();
+  }
+
+  @Override
+  public void addFeaturesListener(Features listener) {
+    this.features.add(listener);
+  }
+
+  public void startGame() {
+    this.features.get(0).setTurn(turn);
+    this.features.get(1).setTurn(!turn);
   }
 
   /**
@@ -109,7 +126,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
   }
 
   @Override
-  public ArrayList<Card> getPlayerHand(String player) {
+  public ArrayList<ICard> getPlayerHand(String player) {
     if (player.equals("R")) {
       return redPlayer.getHand();
     } else if (player.equals("B")) {
@@ -119,6 +136,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
     }
   }
 
+  @Override
   public void isLegalMove(int row, int col) {
     if (row < 0 || row >= rows || col < 0 || col >= cols) {
       throw new IllegalArgumentException("Coordinates are outside of board boundaries!");
@@ -149,6 +167,15 @@ public class ThreeTriosModel implements IThreeTriosModel {
     battle(row, col, grid);
 
     turn = !turn;
+    if (!features.isEmpty()) {
+      this.features.get(0).setTurn(turn);
+      this.features.get(1).setTurn(!turn);
+    }
+
+    if (!features.isEmpty() && isGameOver()) {
+      this.features.get(1).gameOver();
+      this.features.get(0).gameOver();
+    }
   }
 
   /**
@@ -164,7 +191,8 @@ public class ThreeTriosModel implements IThreeTriosModel {
 
     if (row - 1 >= 0 && gameGrid.get(row - 1).get(col) instanceof CardCell) {
       CardCell north = (CardCell) gameGrid.get(row - 1).get(col);
-      if (north.getCard() != null && !Objects.equals(north.getCard().getOwner(), getTurn()) && north.getCard().getSouth() < battler.getCard().getNorth()) {
+      if (north.getCard() != null && !Objects.equals(north.getCard().getOwner(), getTurn())
+              && battleRule.shouldFlip(battler.getCard().getNorth(), north.getCard().getSouth())) {
         north.getCard().setOwner(turn);
         turnedCells.add(north);
       }
@@ -173,7 +201,8 @@ public class ThreeTriosModel implements IThreeTriosModel {
     if (col + 1 < this.cols && grid.get(row).get(col + 1) instanceof CardCell) {
       CardCell east = (CardCell) gameGrid.get(row).get(col + 1);
 
-      if (east.getCard() != null && !Objects.equals(east.getCard().getOwner(), getTurn())  && east.getCard().getWest() < battler.getCard().getEast()) {
+      if (east.getCard() != null && !Objects.equals(east.getCard().getOwner(), getTurn())
+              && battleRule.shouldFlip(battler.getCard().getEast(), east.getCard().getWest())) {
         east.getCard().setOwner(turn);
         turnedCells.add(east);
       }
@@ -181,7 +210,8 @@ public class ThreeTriosModel implements IThreeTriosModel {
 
     if (row + 1 < this.rows && gameGrid.get(row + 1).get(col) instanceof CardCell) {
       CardCell south = (CardCell) gameGrid.get(row + 1).get(col);
-      if (south.getCard() != null && !Objects.equals(south.getCard().getOwner(), getTurn())  &&  south.getCard().getNorth() < battler.getCard().getSouth()) {
+      if (south.getCard() != null && !Objects.equals(south.getCard().getOwner(), getTurn())
+              && battleRule.shouldFlip(battler.getCard().getSouth(), south.getCard().getNorth())) {
         south.getCard().setOwner(turn);
         turnedCells.add(south);
       }
@@ -189,7 +219,8 @@ public class ThreeTriosModel implements IThreeTriosModel {
 
     if (col - 1 >= 0 && gameGrid.get(row).get(col - 1) instanceof CardCell) {
       CardCell west = (CardCell) gameGrid.get(row).get(col - 1);
-      if (west.getCard() != null && !Objects.equals(west.getCard().getOwner(), getTurn()) && west.getCard().getEast() < battler.getCard().getWest()) {
+      if (west.getCard() != null && !Objects.equals(west.getCard().getOwner(), getTurn())
+              && battleRule.shouldFlip(battler.getCard().getWest(), west.getCard().getEast())) {
         west.getCard().setOwner(turn);
         turnedCells.add(west);
       }
@@ -241,9 +272,10 @@ public class ThreeTriosModel implements IThreeTriosModel {
       count = bluePlayer.getHand().size();
     }
 
-    for(int row = 0; row < rows; row++) {
-      for(int col = 0; col < cols; col++) {
-        if (tempGrid.get(row).get(col) instanceof CardCell && ((CardCell) tempGrid.get(row).get(col)).getCard() != null) {
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        if (tempGrid.get(row).get(col) instanceof CardCell
+                && ((CardCell) tempGrid.get(row).get(col)).getCard() != null) {
           if (((CardCell) tempGrid.get(row).get(col)).getCard().getOwner().equals("R") && player) {
             count++;
           }
@@ -267,7 +299,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
   }
 
   @Override
-  public int getCardsFlipped(int row, int col, Card card) {
+  public int getCardsFlipped(int row, int col, ICard card) {
     ArrayList<ArrayList<Cell>> gridCopy = this.getGridCopy();
     boolean originalTurn = this.turn;
     int originalCardNum = this.playerOwnedCards(this.turn, grid);
@@ -287,7 +319,7 @@ public class ThreeTriosModel implements IThreeTriosModel {
       for (int cols = 0; cols < this.grid.get(0).size(); cols++) {
         if (this.grid.get(rows).get(cols) instanceof CardCell) {
           if (((CardCell)this.grid.get(rows).get(cols)).getCard() != null) {
-            Card temp = ((CardCell)this.grid.get(rows).get(cols)).getCard();
+            ICard temp = ((CardCell)this.grid.get(rows).get(cols)).getCard();
             String north;
             String south;
             String east;
@@ -312,7 +344,8 @@ public class ThreeTriosModel implements IThreeTriosModel {
             } else {
               west = Integer.toString(temp.getWest());
             }
-            CardCell addCell = new CardCell(new Card(temp.getName(), north, south, east, west), rows, cols);
+            CardCell addCell = new CardCell(new Card(temp.getName(), north, south, east, west),
+                    rows, cols);
             if (temp.getOwner().equals("R")) {
               addCell.getCard().setOwner(true);
             } else {

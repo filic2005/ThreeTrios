@@ -2,10 +2,14 @@ package cs3500.threetrios.model;
 
 /**
  * Represents a Card-carrying cell on the gameboard.
+ * Top left on the grid is the origin 0,0.
+ * Vertical Axis represents columns and Horizontal Axis represents rows.
+ * The rows and columns held in this class's fields correspond exactly
+ * to the same coordinates on the grid.
  */
-public class CardCell implements Cell {
+public class CardCell implements ICardCell {
 
-  private Card card; //make Optional? Lets us not use null for empty cells.
+  private ICard card; //make Optional? Lets us not use null for empty cells.
   private final int row;
   private final int col;
 
@@ -21,24 +25,16 @@ public class CardCell implements Cell {
     this.col = col;
   }
 
-  /**
-   * Returns a copy of the card in this cell.
-   * Will only ever be called internally by the view, so alias is passed
-   * instead of a copy.
-   * @return Card this Cell's card.
-   */
-  public Card getCard() {
+  @Override
+  public ICard getCard() {
     if (this.card == null) {
       return null;
     }
     return this.card;
   }
 
-  /**
-   * Sets the card field of this cell to the given Card.
-   * @param card Card to be put in this cell.
-   */
-  public void setCard(Card card) {
+  @Override
+  public void setCard(ICard card) {
     this.card = card;
   }
 

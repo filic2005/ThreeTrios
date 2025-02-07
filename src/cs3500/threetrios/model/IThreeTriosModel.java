@@ -1,12 +1,16 @@
 package cs3500.threetrios.model;
 
-import java.util.ArrayList;
+import cs3500.threetrios.controller.Features;
 
 /**
  * Represents a game of ThreeTrios.
  */
 public interface IThreeTriosModel extends IReadOnlyThreeTriosModel {
 
+  /**
+   * Sets initial turn in controller to the correct one for each player.
+   */
+  void startGame();
 
   /**
    * Takes in a location on the board and places the current player's chosen card there.
