@@ -107,9 +107,12 @@ public class ThreeTrios {
 
 
       PlayerView viewPlayer1 = new PlayerView(model, player1, player2);
+
+      //Commented out is another persons views I adapted to work with my code.
       //ProviderModelAdapter adaptedModel = new ProviderModelAdapter(model);
       //TTGraphicsView adaptedView = new TTGraphicsView(adaptedModel);
       //ProviderViewAdapter viewPlayer2 = new ProviderViewAdapter(adaptedView);
+      
       PlayerView viewPlayer2 = new PlayerView(model, player2, player1);
 
       Features controller1 = new ThreeTriosController(model, player1, viewPlayer1);
