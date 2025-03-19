@@ -1,0 +1,10 @@
+- created an IPlayerView interface that extends IThreeTriosViewGUI, and made PlayerView implement IPlayerView instead of
+IThreeTriosViewGUI. This allows the controller to take in an interface with all the required functionality of PlayerView
+instead of directly taking in PlayerView.
+
+-Created Interfaces for Card and CardCell, then made the codebase impl and interfaces use those interfaces instead of
+the concrete classes. We made IReadOnlyThreeTriosModel, IThreeTriosModel, ThreeTriosModel, and all our view classes and
+interfaces use ICard and ICardCell instead of Card and CardCell.
+
+These changes were needed because our codebase used concrete classes which weren't allowed to be shared, so we made it
+use interfaces instead to make our code adaptable.

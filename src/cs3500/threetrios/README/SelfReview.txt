@@ -1,0 +1,4 @@
+Our experience with our providers was great, they responded quickly and were able to address any questions or issues
+we had with their code. As for our code design and implementation, it works well and runs pretty smoothly, but we also
+had to refactor some of our code to use interfaces instead of concrete classes, and I wish we had thought of that
+sooner, and other than that I think we did a pretty good job with both our design and implementation of the game.

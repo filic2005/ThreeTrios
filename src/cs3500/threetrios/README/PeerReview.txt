@@ -1,0 +1,27 @@
+Design critique:
+
+The interfaces we were provided were very flexible, it was easy to adapt our code to theirs since our methods had
+similar purposes, and they properly extended each other when necessary. For example, HoleTT, PlaceHolderTT, and CardTT
+were all types of BoardCells, which made matching our grid to theirs very easy.
+
+Their code was super easy to reuse since they made everything use an interface. Their code was pretty easy to follow,
+the javadocs were good and their method names and variables were descriptive. There were a lot of methods that we didn't
+use, but we of course have different implementations so not all of them were needed.
+
+Implementation critique:
+
+Their views are very capable, they had everything that was needed except there was no pop up window to inform the player
+that they cant play to the board without selecting a card from the hand. My suggestion here would be to add an error()
+method to their panel view that displays an error message when called upon in a pop-up window. Their card font on the
+Board (not the hands) was a little out of place, but that’s purely a visual/decorative issue and can be fixed by playing
+around with the position of the letters on the card.
+
+Documentation and limitations:
+
+We did need to request changes from them, but it was just adding interfaces to concrete classes to make their code
+adaptable, and then changing their model and view interfaces and view implementations so that they use the interfaces
+instead of the concrete classes. After this was done, it made our job super easy since we already had some of the
+adapters written and just had to write a few more simple ones to adapt the cards and grids. They responded very quickly,
+and always gave great responses.
+
+There were no limitations after we got the updated code with the interfaces.
